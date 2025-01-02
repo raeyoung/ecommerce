@@ -13,11 +13,11 @@ docker-compose up -d
 ```
 
 ## `STEP 05`
-- [시나리오 선정](.docs/Scenario.md)
-- [Milestone](.docs/Milestone.md)
-- [SequenceDiagram](.docs/SequenceDiagram.md)
-- [Flowchart](.docs/Flowchart.md)
+- [시나리오 선정](docs/Scenario.md)
+- [Milestone](docs/Milestone.md)
+- [SequenceDiagram](docs/SequenceDiagram.md)
+- [Flowchart](docs/Flowchart.md)
 
 ## `STEP 06`
-- [ERD](.docs/Erd.md)
-- [API 명세 및 Mock API](.docs/Api.md)
+- [ERD](docs/Erd.md)
+- [API 명세 및 Mock API](docs/Api.md)
