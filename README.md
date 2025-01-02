@@ -13,7 +13,7 @@ docker-compose up -d
 ```
 
 ## `STEP 05`
-- [시나리오 선정](.docs/Scenario.md)
-- [Milestone](.docs/Milestone.md)
-- [SequenceDiagram](.docs/SequenceDiagram.md)
-- [Flowchart](.docs/Flowchart.md)
+- [시나리오 선정](docs/Scenario.md)
+- [Milestone](docs/Milestone.md)
+- [SequenceDiagram](docs/SequenceDiagram.md)
+- [Flowchart](docs/Flowchart.md)
