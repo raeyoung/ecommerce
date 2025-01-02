@@ -20,3 +20,4 @@ docker-compose up -d
 
 ## `STEP 06`
 - [ERD](.docs/Erd.md)
+- [API 명세 및 Mock API](.docs/Api.md)
