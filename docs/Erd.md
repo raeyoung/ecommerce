@@ -5,61 +5,63 @@
 
 ![](ERD.png)
 
-1. `User (사용자)`
+1. `users (사용자)`
 - 사용자 고유 식별자 (id)
 - 사용자 이름 (name)
-- 잔액 (balance)
 - 생성일시 (create_at)
 - 업데이트일시 (updated_at)
 
-2. `BalanceHistory (잔액 히스토리)`
-- 히스토리 고유 식별자 (id)
+2. `user_point (잔액)`
+- 포인트 고유 식별자 (id)
 - 사용자 고유 식별자 (user_id)
 - 잔액 타입 (charge / use)
 - 금액 (amount)
+- 현재 잔액 (current_amount)
 - 발생일시 (created_at)
+- 업데이트일시 (updated_at)
 
-3. `Coupon (쿠폰)`
+3. `coupon (쿠폰)`
 - 쿠폰 고유 식별자 (id)
 - 사용자 고유 식별자 (user_id)
 - 주문 고유 식별자 (order_id)
 - 쿠폰명 (name)
-- 쿠폰 설명 (description)
 - 할인 금액 (discount_amount)
-- 쿠폰 상태 (available / used / expired)
+- 수량 (stock)
+- 쿠폰 상태 (status: available / used / expired)
 - 발급일시 (issued_at)
 - 만료일시 (expiration_at)
 
-4. `Order (주문)`
+4. `order (주문)`
 - 주문 고유 식별자 (id)
 - 사용자 고유 식별자 (user_id)
-- 주문 상태 (completed / waiting / cancelled)
+- 주문 상태 (status: completed / waiting / cancelled)
 - 전체 금액 (total_amount)
 - 생성일시 (created_at)
 - 결제일시 (payment_at)
 
-5. `OrderItem (주문 상품)`
+5. `order_item (주문 상품)`
 - 주문 상품 고유 식별자 (id)
-- 상품 고유 식별자 (product_iD)
+- 상품 고유 식별자 (product_id)
 - 주문 고유 식별자 (order_id)
 - 상품명 (product_name)
 - 상품 가격 (product_price)
 - 수량 (quantity)
 
-6. `Payment (결제)`
+6. `payment (결제)`
 - 결제 고유 식별자 (id)
 - 주문 고유 식별자 (order_id)
 - 결제 금액 (payment_amount)
-- 결제 상태 (payment_status: completed, failed)
+- 결제 상태 (status: completed, failed)
 - 생성일시 (created_at)
 - 결제일시 (payment_at)
 - 
-7. `Product (상품)`
+7. `product (상품)`
 - 상품 고유 식별자 (id)
 - 상품명 (name)
 - 가격 (price)
 - 잔여 수량 (stock)
-
+- 생성일시 (created_at)
+- 업데이트일시 (update_at)
 ---
 ### 설명
 - `Users`: 사용자의 기본 정보를 저장합니다. 잔액과 관련된 내역은 `BalanceHistory` 로 관리됩니다.
