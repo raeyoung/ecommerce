@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.interfaces.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserPoint;
 import lombok.*;
@@ -18,8 +19,10 @@ public class UserPointResponse {
 
     Long currentAmount;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDateTime createdAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDateTime updatedAt;
 
     public static UserPointResponse of(UserPoint point, User user) {
@@ -27,6 +30,8 @@ public class UserPointResponse {
                 .userId(user.getId())
                 .name(user.getName())
                 .currentAmount(point.getCurrentAmount())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -34,6 +39,7 @@ public class UserPointResponse {
         return UserPointResponse.builder()
                 .userId(point.getUserId())
                 .currentAmount(point.getCurrentAmount())
+                .createdAt(point.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
                 .build();
     }

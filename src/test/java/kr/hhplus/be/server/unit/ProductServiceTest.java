@@ -27,7 +27,7 @@ public class ProductServiceTest {
     ProductRepository productRepository;
 
     @Test
-    void 상품_목록을_조회한다() {
+    void 상품_목록을_조회에_성공한다() {
         // given
         Pageable pageableDesc = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "price"));
         List<Product> mockProductsDesc = Arrays.asList(
