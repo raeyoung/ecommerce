@@ -23,16 +23,16 @@ public class UserController {
 
     @Operation(summary = "잔액 조회 API")
     @Parameter(name = "userId", description = "사용자 고유 ID")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPointResponse.class)))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PointResponse.class)))
     @GetMapping("/point/{userId}")
-    public ResponseEntity<UserPointResponse> point(@PathVariable long userId) {
+    public ResponseEntity<PointResponse> point(@PathVariable long userId) {
         return ResponseEntity.ok(userFacade.point(userId));
     }
 
     @Operation(summary = "잔액 충전 API")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPointRequest.class)))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PointRequest.class)))
     @PatchMapping("/point/charge")
-    public ResponseEntity<UserPointResponse> charge(@RequestBody UserPointRequest request) {
+    public ResponseEntity<PointResponse> charge(@RequestBody PointRequest request) {
 
         return ResponseEntity.ok(userFacade.chargePoint(request));
     }

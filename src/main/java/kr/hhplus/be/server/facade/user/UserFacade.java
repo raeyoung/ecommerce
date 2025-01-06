@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.facade.user;
 
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.interfaces.user.UserPointRequest;
-import kr.hhplus.be.server.interfaces.user.UserPointResponse;
+import kr.hhplus.be.server.interfaces.user.PointRequest;
+import kr.hhplus.be.server.interfaces.user.PointResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,11 +14,11 @@ public class UserFacade {
         this.userService = userService;
     }
 
-    public UserPointResponse point(long userId) {
+    public PointResponse point(long userId) {
         return userService.point(userId);
     }
 
-    public UserPointResponse chargePoint(UserPointRequest request) {
+    public PointResponse chargePoint(PointRequest request) {
         return userService.chargePoint(request);
     }
 }

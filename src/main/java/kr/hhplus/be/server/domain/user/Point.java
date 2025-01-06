@@ -7,12 +7,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_point")
+@Table(name = "point")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserPoint {
+public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class UserPoint {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public UserPoint(long userId, long currentAmount) {
+    public Point(long userId, long currentAmount) {
         this.userId = userId;
         this.currentAmount = currentAmount;
         this.updatedAt = LocalDateTime.now();

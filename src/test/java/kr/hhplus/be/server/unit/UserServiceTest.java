@@ -1,16 +1,16 @@
 package kr.hhplus.be.server.unit;
 
 import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.domain.user.UserPoint;
-import kr.hhplus.be.server.domain.user.UserPointHistory;
+import kr.hhplus.be.server.domain.user.Point;
+import kr.hhplus.be.server.domain.user.PointHistory;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.global.exception.InvalidException;
 import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.infra.user.UserPointHistoryRepository;
-import kr.hhplus.be.server.infra.user.UserPointRepository;
+import kr.hhplus.be.server.infra.user.PointHistoryRepository;
+import kr.hhplus.be.server.infra.user.PointRepository;
 import kr.hhplus.be.server.infra.user.UserRepository;
-import kr.hhplus.be.server.interfaces.user.UserPointRequest;
-import kr.hhplus.be.server.interfaces.user.UserPointResponse;
+import kr.hhplus.be.server.interfaces.user.PointRequest;
+import kr.hhplus.be.server.interfaces.user.PointResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,10 +34,10 @@ public class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
-    UserPointRepository userPointRepository;
+    PointRepository userPointRepository;
 
     @Mock
-    UserPointHistoryRepository userPointHistoryRepository;
+    PointHistoryRepository userPointHistoryRepository;
 
 
     @Test
@@ -50,13 +50,13 @@ public class UserServiceTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        UserPoint userPoint = new UserPoint(1L, 5000L);  // 잔액 5000
+        Point userPoint = new Point(1L, 5000L);  // 잔액 5000
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);
 
         // when: 서비스 메서드 호출
-        UserPointResponse response = userService.point(1L);
+        PointResponse response = userService.point(1L);
 
         // then: 응답 값 검증
         assertThat(response).isNotNull();
@@ -88,14 +88,14 @@ public class UserServiceTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        UserPoint userPoint = new UserPoint(1L, 5000L);         // 잔액 5000
-        UserPointRequest request = new UserPointRequest(1L, 1000L);     // 충전액 1000
+        Point userPoint = new Point(1L, 5000L);         // 잔액 5000
+        PointRequest request = new PointRequest(1L, 1000L);     // 충전액 1000
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);
 
         // when
-        UserPointResponse response = userService.chargePoint(request);
+        PointResponse response = userService.chargePoint(request);
 
         // then
         assertThat(response).isNotNull();
@@ -104,7 +104,7 @@ public class UserServiceTest {
 
         // verify
         verify(userPointRepository, times(1)).save(userPoint);
-        verify(userPointHistoryRepository, times(1)).save(any(UserPointHistory.class));
+        verify(userPointHistoryRepository, times(1)).save(any(PointHistory.class));
     }
 
     @Test
@@ -115,8 +115,8 @@ public class UserServiceTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        UserPoint userPoint = new UserPoint(1L, 5000L);         // 잔액 5000
-        UserPointRequest request = new UserPointRequest(1L, -100L);  // 음수 금액
+        Point userPoint = new Point(1L, 5000L);         // 잔액 5000
+        PointRequest request = new PointRequest(1L, -100L);  // 음수 금액
 
         // userRepository와 userPointRepository의 mock 설정
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));

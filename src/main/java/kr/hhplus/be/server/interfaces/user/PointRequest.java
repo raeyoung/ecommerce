@@ -3,7 +3,7 @@ package kr.hhplus.be.server.interfaces.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record UserPointRequest (
+public record PointRequest(
         @Schema(description = "사용자 고유 식별자")
         Long userId,
 
