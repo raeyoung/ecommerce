@@ -17,3 +17,7 @@ docker-compose up -d
 - [Milestone](docs/Milestone.md)
 - [SequenceDiagram](docs/SequenceDiagram.md)
 - [Flowchart](docs/Flowchart.md)
+
+## `STEP 06`
+- [ERD](docs/Erd.md)
+- [API 명세 및 Mock API](docs/Api.md)
