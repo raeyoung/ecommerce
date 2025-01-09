@@ -1,21 +1,40 @@
 package kr.hhplus.be.server.interfaces.payment;
 
-import kr.hhplus.be.server.interfaces.product.ProductResponse;
+import kr.hhplus.be.server.domain.payment.Payment;
+import kr.hhplus.be.server.domain.payment.PaymentStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@Data
 @Builder
-public record PaymentResponse (
-   Long id,
-   int amount,
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaymentResponse {
 
-   String status
+    private Long id;
 
-){
-    public static PaymentResponse of(long id, int paymentAmount, String status) {
+    private Long paymentAmount;
+
+    private PaymentStatus status;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime paymentAt;
+
+    public static PaymentResponse from(Payment payment) {
+        if (payment == null) {
+            return null;
+        }
         return PaymentResponse.builder()
-                .id(id)
-                .amount(paymentAmount)
-                .status(status)
+                .id(payment.getId())
+                .paymentAmount(payment.getPaymentAmount())
+                .status(payment.getStatus())
+                .createdAt(payment.getCreatedAt())
+                .paymentAt(payment.getPaymentAt())
                 .build();
     }
 }
