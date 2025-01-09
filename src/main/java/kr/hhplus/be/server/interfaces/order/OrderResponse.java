@@ -1,23 +1,18 @@
 package kr.hhplus.be.server.interfaces.order;
 
-import kr.hhplus.be.server.interfaces.product.ProductResponse;
-import lombok.Builder;
+import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.order.OrderStatus;
 
-import java.util.List;
-
-@Builder
 public record OrderResponse (
-        Long id,
-        int totalPrice,
-        String status,
-        List<ProductResponse> productList
+    Long id,
+    OrderStatus status,
+    Integer productCount
 ){
-    public static OrderResponse of(long id, int totalPrice, String status, List<ProductResponse> productList) {
-        return OrderResponse.builder()
-                .id(id)
-                .totalPrice(totalPrice)
-                .status(status)
-                .productList(productList)
-                .build();
+    public static OrderResponse to(Order order) {
+        return new OrderResponse(
+                order.getOrderId(),
+                order.getStatus(),
+                order.getOrderItems().size()
+        );
     }
 }
