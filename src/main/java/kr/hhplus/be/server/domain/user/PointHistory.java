@@ -36,6 +36,7 @@ public class PointHistory {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // 포인트 충전
     public static PointHistory createCharge(long userId, long amount) {
         return PointHistory.builder()
                 .userId(userId)
@@ -46,6 +47,7 @@ public class PointHistory {
                 .build();
     }
 
+    // 포인트 사용
     public static PointHistory createUse(long userId, long amount) {
         return PointHistory.builder()
                 .userId(userId)
