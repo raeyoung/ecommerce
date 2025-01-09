@@ -25,7 +25,7 @@ public class UserService {
     }
 
     /**
-     * 잔액 조회
+     * 포인트 조회
      * @param userId
      * @return
      */
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     /**
-     * 잔액 충전
+     * 포인트 충전
      * @param request
      * @return
      */
@@ -77,13 +77,18 @@ public class UserService {
         return PointResponse.from(userPoint);
     }
 
+    /**
+     * 포인트 사용
+     * @param request
+     * @return
+     */
     @Transactional
     public PointResponse usePoint(PointRequest request) {
         // 사용자 검증
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-        Point userPoint = userPointRepository.findByUserId(user.getId());
+        Point userPoint = userPointRepository.findByUserIdWithLock(user.getId());
 
         // UserPoint가 존재하지 않으면 새로 생성
         if (userPoint == null) {
@@ -99,7 +104,7 @@ public class UserService {
         userPointRepository.save(userPoint);
 
         // UserPointHistory 기록 (충전 내역)
-        PointHistory userPointHistory = PointHistory.createCharge(user.getId(), request.amount());
+        PointHistory userPointHistory = PointHistory.createUse(user.getId(), request.amount());
         userPointHistory.setCurrentAmount(userPoint.getCurrentAmount());
 
         userPointHistoryRepository.save(userPointHistory);

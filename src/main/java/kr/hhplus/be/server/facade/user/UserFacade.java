@@ -21,4 +21,8 @@ public class UserFacade {
     public PointResponse chargePoint(PointRequest request) {
         return userService.chargePoint(request);
     }
+
+    public PointResponse usePoint(PointRequest request) {
+        return userService.usePoint(request);
+    }
 }
