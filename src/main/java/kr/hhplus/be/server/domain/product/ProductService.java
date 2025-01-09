@@ -1,12 +1,17 @@
 package kr.hhplus.be.server.domain.product;
 
+import kr.hhplus.be.server.global.exception.NotFoundException;
 import kr.hhplus.be.server.infra.product.ProductRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -18,7 +23,7 @@ public class ProductService {
     }
 
     /**
-     * 상품 조회
+     * 상품 목록 조회
      * price 내림차순으로 5개 상품씩 조회한다.
      * @param page
      * @param criteria
@@ -32,5 +37,34 @@ public class ProductService {
 
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(ProductResponse::from);
+    }
+
+    /**
+     * 단일 상품 조회
+     * @param productId
+     * @return
+     */
+    @Cacheable(cacheNames = "products", key = "#productId")
+    public Optional<Product> product(long productId) {
+        return productRepository.findById(productId);
+    }
+
+    /**
+     * 상품 수량 감소
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    @CachePut(cacheNames = "products", key = "#productId")
+    public Product reduceProduct(long productId, long quantity) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("상품이 존재하지 않습니다."));
+
+        product.reduceStock(quantity);
+
+        productRepository.save(product);
+
+        return product;
     }
 }

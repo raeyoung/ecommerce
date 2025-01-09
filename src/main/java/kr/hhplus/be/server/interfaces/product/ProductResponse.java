@@ -16,7 +16,7 @@ public class ProductResponse{
 
     Long price;
 
-    int stock;
+    Long stock;
 
     public static ProductResponse from(Product product) {
         return ProductResponse.builder()
