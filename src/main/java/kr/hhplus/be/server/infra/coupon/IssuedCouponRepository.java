@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.infra.coupon;
 
+import kr.hhplus.be.server.domain.coupon.CouponStatus;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;
@@ -24,4 +25,6 @@ public interface IssuedCouponRepository extends JpaRepository<IssuedCoupon, Long
             "WHERE ic.userId = :userId " +
             "ORDER BY c.expirationAt ASC")
     Page<IssuedCouponResponse> findCouponsByUserIdOrderedByExpiration(@Param("userId") long userId, Pageable pageable);
+
+    IssuedCoupon save(IssuedCoupon issuedCoupon);
 }

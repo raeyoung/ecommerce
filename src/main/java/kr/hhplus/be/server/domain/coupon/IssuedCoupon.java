@@ -29,4 +29,14 @@ public class IssuedCoupon {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public static IssuedCoupon useCoupon(long userId, long couponId) {
+        return IssuedCoupon.builder()
+                .userId(userId)
+                .couponId(couponId)
+                .status(CouponStatus.USED)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }

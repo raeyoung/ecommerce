@@ -10,11 +10,11 @@ import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class CouponService {
@@ -75,5 +75,32 @@ public class CouponService {
             throw new NotFoundException("사용자가 보유한 쿠폰이 없습니다.");
         }
         return issuedCoupons;
+    }
+
+    /**
+     * 동시성 고려한 쿠폰 조회
+     * @param couponId
+     * @return
+     */
+    public Coupon getCoupon(long couponId) {
+        return couponRepository.findByIdWithLock(couponId);
+    }
+
+    /**
+     * 사용자가 보유한 쿠폰 단건 조회
+     * @param couponId
+     * @return
+     */
+    public Optional<IssuedCoupon> userCoupon(long couponId) {
+        return issuedCouponRepository.findById(couponId);
+    }
+
+    /**
+     * 쿠폰 상태 업데이트
+     * @param issuedCoupon
+     * @return
+     */
+    public IssuedCoupon updateCouponStatus(IssuedCoupon issuedCoupon) {
+        return issuedCouponRepository.save(issuedCoupon);
     }
 }
