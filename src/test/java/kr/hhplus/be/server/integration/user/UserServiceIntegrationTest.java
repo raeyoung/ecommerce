@@ -30,9 +30,6 @@ public class UserServiceIntegrationTest {
     UserRepository userRepository;
 
     @Autowired
-    PointRepository userPointRepository;
-
-    @Autowired
     PointRepository pointRepository;
 
     User user;
@@ -79,7 +76,7 @@ public class UserServiceIntegrationTest {
         assertThat(response.getCurrentAmount(), is(expectedAmount)); // 충전 후 잔액이 예상 값과 같은지 검증
 
         // 데이터베이스에서 실제 잔액 검증
-        Point userPoint = userPointRepository.findByUserId(userId);
+        Point userPoint = pointRepository.findByUserId(userId);
         assertThat(userPoint, is(notNullValue())); // UserPoint가 null이 아닌지 검증
         assertThat(userPoint.getCurrentAmount(), is(expectedAmount)); // DB의 잔액이 예상 값과 같은지 검증
     }
