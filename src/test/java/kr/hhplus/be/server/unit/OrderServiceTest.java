@@ -30,9 +30,6 @@ public class OrderServiceTest {
     @Mock
     OrderRepository orderRepository;
 
-    @Mock
-    private OrderItemRepository orderItemRepository;
-
     @Test
     void 사용자가_상품주문을_성공한다() {
         // Given
@@ -71,17 +68,5 @@ public class OrderServiceTest {
         assertThat(createdOrder.getOrderItems()).hasSize(2);
 
         verify(orderRepository, times(1)).save(any(Order.class));
-    }
-
-    @Test
-    void 사용자_주문_목록_없을경우_NotFoundException를_반환한다() {
-        // Given
-        Long userId = 1L;
-        when(orderRepository.findByUserId(userId)).thenReturn(Collections.emptyList());
-
-        // When & Then
-        assertThatThrownBy(() -> orderService.getOrdersByUserId(userId))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage("주문 내역이 없습니다.");
     }
 }

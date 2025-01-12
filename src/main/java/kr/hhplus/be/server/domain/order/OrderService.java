@@ -22,19 +22,6 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    /**
-     * 특정 사용자의 주문 내역 조회
-     * @param userId
-     * @return
-     */
-    public List<OrderResponse> getOrdersByUserId(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        if (orders.isEmpty()) {
-            throw new NotFoundException("주문 내역이 없습니다.");
-        }
-        return orders.stream().map(OrderResponse::to).collect(Collectors.toList());
-    }
-
     public Optional<Order> getOrder(long orderId, OrderStatus orderStatus) {
         return orderRepository.findByOrderIdAndStatusWithLock(orderId, orderStatus)
                 .map(order -> {
