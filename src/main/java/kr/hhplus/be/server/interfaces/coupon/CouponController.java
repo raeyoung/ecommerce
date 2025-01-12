@@ -22,7 +22,6 @@ import java.util.List;
 @Tag(name = "쿠폰 API")
 public class CouponController {
 
-    private final CouponService couponService;
     private final CouponFacade couponFacade;
 
     @Operation(summary = "선착순 쿠폰 발급 API")
@@ -43,7 +42,7 @@ public class CouponController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<IssuedCouponResponse> coupons = couponFacade.userCoupons(userId, page, size);
+        Page<IssuedCouponResponse> coupons = couponFacade.getIssuedCoupons(userId, page, size);
         return ResponseEntity.ok(coupons);
     }
 }

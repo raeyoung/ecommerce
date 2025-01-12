@@ -64,7 +64,7 @@ public class CouponService {
      * @return
      */
     @Transactional(readOnly = true)
-    public Page<IssuedCouponResponse> userCoupons(long userId, int page, int size) {
+    public Page<IssuedCouponResponse> getIssuedCoupons(long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         // 사용자가 보유한 쿠폰이 없을 경우 예외 처리

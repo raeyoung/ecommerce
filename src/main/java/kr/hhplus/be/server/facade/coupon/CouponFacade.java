@@ -22,7 +22,7 @@ public class CouponFacade {
         return couponService.issueCoupon(request);
     }
 
-    public Page<IssuedCouponResponse> userCoupons(long userId, int page, int size) {
-        return couponService.userCoupons(userId, page, size);
+    public Page<IssuedCouponResponse> getIssuedCoupons(long userId, int page, int size) {
+        return couponService.getIssuedCoupons(userId, page, size);
     }
 }
