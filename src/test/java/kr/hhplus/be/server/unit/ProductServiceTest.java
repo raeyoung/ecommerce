@@ -3,7 +3,7 @@ package kr.hhplus.be.server.unit;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductService;
 import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.infra.product.ProductRepository;
+import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

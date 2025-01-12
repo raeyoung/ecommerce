@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
 import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.infra.order.OrderItemRepository;
-import kr.hhplus.be.server.infra.order.OrderRepository;
 import kr.hhplus.be.server.interfaces.order.OrderResponse;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
 import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.infra.product.ProductRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;

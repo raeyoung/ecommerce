@@ -6,10 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PointRepository extends JpaRepository<Point, Long> {
+public interface PointJpaRepository extends JpaRepository<Point, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE) // 비관적 락 설정
     @Query("SELECT p FROM Point p WHERE p.userId = :userId")

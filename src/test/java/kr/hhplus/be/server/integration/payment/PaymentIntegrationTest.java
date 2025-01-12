@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.coupon.CouponStatus;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderItem;
+import kr.hhplus.be.server.domain.order.OrderItemRepository;
 import kr.hhplus.be.server.domain.payment.PaymentStatus;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.Point;
@@ -13,12 +14,12 @@ import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.facade.payment.PaymentFacade;
 import kr.hhplus.be.server.facade.user.UserFacade;
 import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.infra.coupon.CouponRepository;
-import kr.hhplus.be.server.infra.coupon.IssuedCouponRepository;
-import kr.hhplus.be.server.infra.order.OrderRepository;
-import kr.hhplus.be.server.infra.product.ProductRepository;
-import kr.hhplus.be.server.infra.user.PointRepository;
-import kr.hhplus.be.server.infra.user.UserRepository;
+import kr.hhplus.be.server.domain.coupon.CouponRepository;
+import kr.hhplus.be.server.domain.coupon.IssuedCouponRepository;
+import kr.hhplus.be.server.domain.order.OrderRepository;
+import kr.hhplus.be.server.domain.product.ProductRepository;
+import kr.hhplus.be.server.domain.user.PointRepository;
+import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
@@ -64,6 +65,9 @@ public class PaymentIntegrationTest {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderItemRepository orderItemRepository;
 
     @Autowired
     CouponRepository couponRepository;
@@ -119,7 +123,7 @@ public class PaymentIntegrationTest {
         orderItem.setOrderId(order.getOrderId());
         order.addOrderItem(orderItem);
 
-        orderRepository.save(orderItem);
+        orderItemRepository.save(orderItem);
     }
 
     @Test

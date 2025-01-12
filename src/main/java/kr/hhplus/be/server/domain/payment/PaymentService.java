@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.payment;
 
 import kr.hhplus.be.server.domain.order.Order;
-import kr.hhplus.be.server.infra.payment.PaymentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -3,8 +3,6 @@ package kr.hhplus.be.server.domain.coupon;
 import kr.hhplus.be.server.global.exception.AlreadyExistsException;
 import kr.hhplus.be.server.global.exception.NotFoundException;
 import kr.hhplus.be.server.global.exception.OutOfStockException;
-import kr.hhplus.be.server.infra.coupon.CouponRepository;
-import kr.hhplus.be.server.infra.coupon.IssuedCouponRepository;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;

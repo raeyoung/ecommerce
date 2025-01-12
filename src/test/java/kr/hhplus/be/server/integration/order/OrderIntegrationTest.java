@@ -1,21 +1,19 @@
 package kr.hhplus.be.server.integration.order;
 
-import jakarta.persistence.EntityManager;
 import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.facade.order.OrderFacade;
 import kr.hhplus.be.server.global.exception.InvalidException;
-import kr.hhplus.be.server.infra.order.OrderItemRepository;
-import kr.hhplus.be.server.infra.order.OrderRepository;
-import kr.hhplus.be.server.infra.product.ProductRepository;
-import kr.hhplus.be.server.infra.user.PointRepository;
-import kr.hhplus.be.server.infra.user.UserRepository;
+import kr.hhplus.be.server.domain.order.OrderItemRepository;
+import kr.hhplus.be.server.domain.order.OrderRepository;
+import kr.hhplus.be.server.domain.product.ProductRepository;
+import kr.hhplus.be.server.domain.user.PointRepository;
+import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.order.OrderProduct;
 import kr.hhplus.be.server.interfaces.order.OrderRequest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

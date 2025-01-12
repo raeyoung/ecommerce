@@ -2,24 +2,21 @@ package kr.hhplus.be.server.integration.product;
 
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderItem;
+import kr.hhplus.be.server.domain.order.OrderItemRepository;
 import kr.hhplus.be.server.domain.product.Product;
-import kr.hhplus.be.server.domain.product.ProductService;
 import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.facade.product.ProductFacade;
-import kr.hhplus.be.server.infra.order.OrderRepository;
-import kr.hhplus.be.server.infra.product.ProductRepository;
-import kr.hhplus.be.server.infra.user.PointRepository;
-import kr.hhplus.be.server.infra.user.UserRepository;
+import kr.hhplus.be.server.domain.order.OrderRepository;
+import kr.hhplus.be.server.domain.product.ProductRepository;
+import kr.hhplus.be.server.domain.user.PointRepository;
+import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -48,6 +45,9 @@ public class ProductServiceIntegrationTest {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderItemRepository orderItemRepository;
 
     User user;
 
@@ -79,7 +79,7 @@ public class ProductServiceIntegrationTest {
 
         for (OrderItem orderItem : order.getOrderItems()) {
             orderItem.setOrderId(order.getOrderId());
-            orderRepository.save(orderItem);
+            orderItemRepository.save(orderItem);
         }
     }
 
