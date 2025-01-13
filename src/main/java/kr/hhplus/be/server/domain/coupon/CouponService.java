@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import kr.hhplus.be.server.global.exception.AlreadyExistsException;
-import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.global.exception.OutOfStockException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;
@@ -33,11 +31,11 @@ public class CouponService {
     public String issueCoupon(CouponRequest request) {
         // 비관적 락을 사용하여 쿠폰 데이터 조회
         Coupon coupon = couponRepository.findAvailableCouponForUpdate(request.couponId())
-                .orElseThrow(() -> new OutOfStockException("쿠폰이 모두 소진되었습니다."));
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.COUPON_SOLD_OUT.getMessage()));
 
         // 중복 발급 여부
         if (issuedCouponRepository.findByUserIdAndCouponId(request.userId(), request.couponId()).isPresent()) {
-            throw new AlreadyExistsException("이미 해당 쿠폰을 발급받았습니다.");
+            throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_EXISTED.getMessage());
         }
 
         // 재고를 감소
@@ -70,7 +68,7 @@ public class CouponService {
         // 사용자가 보유한 쿠폰이 없을 경우 예외 처리
         Page<IssuedCouponResponse> issuedCoupons = issuedCouponRepository.findCouponsByUserIdOrderedByExpiration(userId, pageable);
         if (issuedCoupons.isEmpty()) {
-            throw new NotFoundException("사용자가 보유한 쿠폰이 없습니다.");
+            throw new IllegalStateException(ExceptionMessage.COUPON_NOT_FOUND.getMessage());
         }
         return issuedCoupons;
     }

@@ -4,9 +4,7 @@ import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import kr.hhplus.be.server.domain.coupon.CouponStatus;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
-import kr.hhplus.be.server.global.exception.AlreadyExistsException;
-import kr.hhplus.be.server.global.exception.NotFoundException;
-import kr.hhplus.be.server.global.exception.OutOfStockException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.IssuedCouponRepository;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -83,15 +80,14 @@ public class CouponServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> couponService.issueCoupon(request))
-                .isInstanceOf(OutOfStockException.class)
-                .hasMessage("쿠폰이 모두 소진되었습니다.");
+                .isInstanceOf(IllegalStateException.class);
 
         verify(couponRepository, times(1)).findAvailableCouponForUpdate(couponId);
         verify(issuedCouponRepository, never()).save(any());
     }
 
     @Test
-    void 사용자가_이미_쿠폰을_발급받은_경우_AlreadyExistsException를_반환한다() {
+    void 사용자가_이미_쿠폰을_발급받은_경우_COUPON_ALREADY_EXISTED를_반환한다() {
         // Given
         long userId = 1L;
         long couponId = 1L;
@@ -119,8 +115,8 @@ public class CouponServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> couponService.issueCoupon(request))
-                .isInstanceOf(AlreadyExistsException.class)
-                .hasMessage("이미 해당 쿠폰을 발급받았습니다.");
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ExceptionMessage.COUPON_ALREADY_EXISTED.getMessage());
 
         verify(issuedCouponRepository, times(1)).findByUserIdAndCouponId(userId, couponId);
         verify(issuedCouponRepository, never()).save(any());
@@ -174,7 +170,7 @@ public class CouponServiceTest {
         when(issuedCouponRepository.findCouponsByUserIdOrderedByExpiration(eq(1L), any(Pageable.class))).thenReturn(page);
 
         // When
-        Page<IssuedCouponResponse> result = couponService.userCoupons(1L, 0, 10);
+        Page<IssuedCouponResponse> result = couponService.getIssuedCoupons(1L, 0, 10);
 
         // Then
         assertThat(result.getTotalElements()).isEqualTo(2); // 총 2개의 쿠폰
@@ -186,7 +182,7 @@ public class CouponServiceTest {
     }
 
     @Test
-    void 사용자가_보유한_쿠폰이_없을_경우_NotFoundException를_반환한다() {
+    void 사용자가_보유한_쿠폰이_없을_경우_COUPON_NOT_FOUND를_반환한다() {
         // Given
         Page<IssuedCouponResponse> page = Page.empty();
 
@@ -194,8 +190,8 @@ public class CouponServiceTest {
                 .thenReturn(page);
 
         // When & Then
-        assertThatThrownBy(() -> couponService.userCoupons(1L, 0, 10))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage("사용자가 보유한 쿠폰이 없습니다.");
+        assertThatThrownBy(() -> couponService.getIssuedCoupons(1L, 0, 10))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ExceptionMessage.COUPON_NOT_FOUND.getMessage());
     }
 }

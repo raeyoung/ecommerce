@@ -83,7 +83,7 @@ public class CouponControllerIntegrationTest {
         Page<IssuedCouponResponse> issuedCouponResponses = new PageImpl<>(coupons, PageRequest.of(0, 10), coupons.size());
 
         // couponFacade의 userCoupons 메서드가 반환할 결과를 Mock 설정
-        when(couponFacade.userCoupons(userId, 0, 10)).thenReturn(issuedCouponResponses);
+        when(couponFacade.getIssuedCoupons(userId, 0, 10)).thenReturn(issuedCouponResponses);
 
         // When & Then
         mockMvc.perform(get("/api/v1/coupons/user/{userId}", userId)

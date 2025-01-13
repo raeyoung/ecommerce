@@ -10,8 +10,7 @@ import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.global.exception.InvalidException;
-import kr.hhplus.be.server.global.exception.NotFoundException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
@@ -40,20 +39,21 @@ import org.springframework.transaction.annotation.Transactional;
         public PaymentResponse payment(long userId, PaymentRequest request) {
             // 주문 검증
             Order order = orderService.getOrder(request.orderId(), OrderStatus.WAITING)
-                    .orElseThrow(() -> new NotFoundException("존재하지 않는 주문입니다."));
+                    .orElseThrow(() -> new IllegalStateException(ExceptionMessage.ORDER_NOT_FOUND.getMessage()));
 
             if (order.getStatus() == OrderStatus.COMPLETED) {
-                throw new InvalidException("이미 결제된 주문입니다.");
+                throw new IllegalStateException(ExceptionMessage.ORDER_ALREADY_PAYMENT.getMessage());
             }
 
             // 쿠폰 검증 및 할인 계산
             long discountAmount = 0L; // 초기값
             if (request.couponId() != null) {
                 IssuedCoupon issuedCoupon = couponService.userCoupon(request.couponId())
-                        .orElseThrow(() -> new InvalidException("유효하지 않은 쿠폰입니다."));
+                        .orElseThrow(() -> new IllegalStateException(ExceptionMessage.INVALID_COUPON.getMessage()));
 
+                // 쿠폰을 이미 사용한 경우
                 if (issuedCoupon.getStatus().equals(CouponStatus.USED)) {
-                    throw new InvalidException("이미 사용된 쿠폰입니다.");
+                    throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_USED.getMessage());
                 }
 
                 Coupon coupon = couponService.getCoupon(issuedCoupon.getCouponId());

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.user;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.global.exception.InvalidException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -35,14 +35,14 @@ public class Point {
 
     public void chargePoint(long amount) {
         if(amount <= 0) {
-            throw new InvalidException("0보다 작은 값을 충전할 수 없습니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_AMOUNT.getMessage());
         }
         this.currentAmount += amount;
     }
 
     public void usePoint(long amount) {
         if(amount <= 0) {
-            throw new InvalidException("0보다 작은 값을 사용할 수 없습니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_AMOUNT.getMessage());
         }
         this.currentAmount -= amount;
     }

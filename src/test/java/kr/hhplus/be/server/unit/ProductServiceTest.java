@@ -2,7 +2,6 @@ package kr.hhplus.be.server.unit;
 
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductService;
-import kr.hhplus.be.server.global.exception.NotFoundException;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.junit.jupiter.api.Test;
@@ -61,14 +60,14 @@ public class ProductServiceTest {
     }
 
     @Test
-    void 상품이_존재하지_않는_경우_NotFoundException을_반환한다() {
+    void 상품이_존재하지_않는_경우_IllegalStateException을_반환한다() {
         // Given
         long productId = 1L;
         long quantity = 1L;
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> productService.reduceProduct(productId, quantity));
+        assertThrows(IllegalStateException.class, () -> productService.reduceProduct(productId, quantity));
     }
 
     @Test

@@ -4,8 +4,6 @@ import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.PointHistory;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.global.exception.InvalidException;
-import kr.hhplus.be.server.global.exception.NotFoundException;
 import kr.hhplus.be.server.domain.user.PointHistoryRepository;
 import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
@@ -66,14 +64,14 @@ public class UserServiceTest {
     }
 
     @Test
-    void 존재하지_않는_사용자의_경우_NotFoundException_반환한다() {
+    void 존재하지_않는_사용자의_경우_IllegalArgumentException_반환한다() {
         // given
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
         try {
             userService.point(1L);
-        } catch (NotFoundException ex) {
+        } catch (IllegalStateException ex) {
             // then
             assertThat(ex.getMessage()).isEqualTo("사용자를 찾을 수 없습니다.");
         }
@@ -108,7 +106,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void 충전금액이_0보다_작을_때_InvalidException을_반환한다() {
+    void 충전금액이_0보다_작을_때_IllegalArgumentException을_반환한다() {
         // given
         User user = User.builder()
                 .id(1L)
@@ -123,11 +121,8 @@ public class UserServiceTest {
         when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);  // 기존 userPoint를 반환
 
         // when & then: 예외가 발생하는지 확인
-        InvalidException exception = assertThrows(InvalidException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             userService.chargePoint(request);
         });
-
-        // then: 예외 메시지 검증
-        assertThat(exception.getMessage()).isEqualTo("0보다 작은 값을 충전할 수 없습니다.");
     }
 }

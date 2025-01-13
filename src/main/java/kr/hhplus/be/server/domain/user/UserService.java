@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.user;
 
-import kr.hhplus.be.server.global.exception.NotFoundException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,12 @@ public class UserService {
     public PointResponse point(long userId) {
         // 사용자 검증
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
 
         Point userPoint = pointRepository.findByUserId(userId);
         // UserPoint가 없으면 예외 처리 (혹은 기본 값 처리)
         if (userPoint == null) {
-            throw new NotFoundException("해당 사용자의 포인트 정보를 찾을 수 없습니다.");
+            throw new IllegalStateException(ExceptionMessage.POINT_NOT_FOUND.getMessage());
         }
         return PointResponse.of(userPoint, user);
     }
@@ -49,7 +49,7 @@ public class UserService {
     public PointResponse chargePoint(PointRequest request) {
         // 사용자 검증
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
 
         Point userPoint = pointRepository.findByUserId(user.getId());
 
@@ -84,7 +84,7 @@ public class UserService {
     public PointResponse usePoint(PointRequest request) {
         // 사용자 검증
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
 
         Point userPoint = pointRepository.findByUserIdWithLock(user.getId());
 

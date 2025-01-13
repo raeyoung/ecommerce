@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.product;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.global.exception.InvalidException;
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,11 +43,11 @@ public class Product {
     // 상품 수량 감소
     public void reduceStock(long quantity) {
         if(quantity <= 0) {
-            throw new InvalidException("유효하지 않는 수량입니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_QUANTITY.getMessage());
         }
 
         if (this.stock < quantity) {
-            throw new InvalidException("상품 재고가 부족합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INSUFFICIENT_STOCK.getMessage());
         }
         this.stock -= quantity;
     }

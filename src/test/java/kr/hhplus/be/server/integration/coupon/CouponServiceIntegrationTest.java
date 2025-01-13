@@ -82,7 +82,7 @@ public class CouponServiceIntegrationTest {
         int size = 10;
 
         // When
-        Page<IssuedCouponResponse> result = couponService.userCoupons(userId, page, size);
+        Page<IssuedCouponResponse> result = couponService.getIssuedCoupons(userId, page, size);
 
         // Then
         assertThat(result).isNotEmpty();
