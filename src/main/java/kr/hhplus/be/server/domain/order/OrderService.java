@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
+import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,5 +68,22 @@ public class OrderService {
         order.setStatus(orderStatus);
 
         orderRepository.save(order);
+    }
+
+    /**
+     * 주문 검증 및 조회
+     * @param orderId
+     * @param expectedStatus
+     * @return
+     */
+    public Order getValidatedOrder(long orderId, OrderStatus expectedStatus) {
+        Order order = getOrder(orderId, expectedStatus)
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.ORDER_NOT_FOUND.getMessage()));
+
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new IllegalStateException(ExceptionMessage.ORDER_ALREADY_PAYMENT.getMessage());
+        }
+
+        return order;
     }
 }

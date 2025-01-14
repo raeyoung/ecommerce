@@ -99,4 +99,30 @@ public class CouponService {
     public IssuedCoupon updateCouponStatus(IssuedCoupon issuedCoupon) {
         return issuedCouponRepository.save(issuedCoupon);
     }
+
+    /**
+     * 쿠폰 사용 여부 검증
+     * @param userId
+     * @param couponId
+     * @return
+     */
+    public long processCoupon(long userId, Long couponId) {
+        if (couponId == null) {
+            return 0L;
+        }
+
+        IssuedCoupon issuedCoupon = userCoupon(couponId)
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.INVALID_COUPON.getMessage()));
+
+        if (issuedCoupon.getStatus().equals(CouponStatus.USED)) {
+            throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_USED.getMessage());
+        }
+
+        Coupon coupon = getCoupon(issuedCoupon.getCouponId());
+        long discountAmount = coupon.getDiscountAmount();
+
+        updateCouponStatus(IssuedCoupon.useCoupon(userId, couponId));
+        return discountAmount;
+    }
+
 }

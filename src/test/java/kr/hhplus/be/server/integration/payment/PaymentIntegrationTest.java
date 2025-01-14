@@ -144,14 +144,14 @@ public class PaymentIntegrationTest {
     }
 
     @Test
-    void 주문이_존재하지_않는_경우_NotFoundException를_반환한다() {
+    void 주문이_존재하지_않는_경우_IllegalStateException를_반환한다() {
         // Given
         long userId = user.getId();
         long orderId = 0L;
         long couponId = issuedCoupon.getId();
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> paymentFacade.payment(userId, new PaymentRequest(userId, orderId, couponId)));
+        assertThrows(IllegalStateException.class, () -> paymentFacade.payment(userId, new PaymentRequest(userId, orderId, couponId)));
     }
 
     @Test

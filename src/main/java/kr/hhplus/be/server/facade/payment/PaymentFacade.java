@@ -38,30 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
         @Transactional
         public PaymentResponse payment(long userId, PaymentRequest request) {
             // 주문 검증
-            Order order = orderService.getOrder(request.orderId(), OrderStatus.WAITING)
-                    .orElseThrow(() -> new IllegalStateException(ExceptionMessage.ORDER_NOT_FOUND.getMessage()));
+            Order order = orderService.getValidatedOrder(request.orderId(), OrderStatus.WAITING);
 
-            if (order.getStatus() == OrderStatus.COMPLETED) {
-                throw new IllegalStateException(ExceptionMessage.ORDER_ALREADY_PAYMENT.getMessage());
-            }
-
-            // 쿠폰 검증 및 할인 계산
-            long discountAmount = 0L; // 초기값
-            if (request.couponId() != null) {
-                IssuedCoupon issuedCoupon = couponService.userCoupon(request.couponId())
-                        .orElseThrow(() -> new IllegalStateException(ExceptionMessage.INVALID_COUPON.getMessage()));
-
-                // 쿠폰을 이미 사용한 경우
-                if (issuedCoupon.getStatus().equals(CouponStatus.USED)) {
-                    throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_USED.getMessage());
-                }
-
-                Coupon coupon = couponService.getCoupon(issuedCoupon.getCouponId());
-                discountAmount = coupon.getDiscountAmount();
-
-                // 쿠폰 상태 업데이트
-                couponService.updateCouponStatus(IssuedCoupon.useCoupon(userId, request.couponId()));
-            }
+            // 쿠폰 처리
+            long discountAmount = couponService.processCoupon(userId, request.couponId());
 
             // 포인트 사용
             if (discountAmount > 0) {
