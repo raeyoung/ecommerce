@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.domain.user;
 
-import kr.hhplus.be.server.domain.user.PointHistory;
-import kr.hhplus.be.server.domain.user.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

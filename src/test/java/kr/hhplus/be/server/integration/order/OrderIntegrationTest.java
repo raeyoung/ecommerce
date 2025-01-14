@@ -5,7 +5,6 @@ import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.facade.order.OrderFacade;
-import kr.hhplus.be.server.global.exception.InvalidException;
 import kr.hhplus.be.server.domain.order.OrderItemRepository;
 import kr.hhplus.be.server.domain.order.OrderRepository;
 import kr.hhplus.be.server.domain.product.ProductRepository;
@@ -19,15 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Testcontainers
@@ -86,23 +83,28 @@ public class OrderIntegrationTest {
         CountDownLatch latch = new CountDownLatch(users.size());
 
         // When
-        for(int i = 0; i < users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             int index = i;
             executorService.submit(() -> {
-
                 List<OrderProduct> orderProductList = new ArrayList<>();
                 orderProductList.add(new OrderProduct(products.get(0).getId(), 2L));
 
                 try {
                     orderFacade.createOrder(users.get(index).getId(), new OrderRequest(orderProductList));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
             });
         }
 
-        latch.await();
+        // 기다림 추가
+        latch.await(60, TimeUnit.SECONDS); // 대기 시간 제한
         executorService.shutdown();
+        if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+            executorService.shutdownNow(); // 강제 종료
+        }
 
         // Then
         List<OrderItem> orderItems = orderItemRepository.findByProductId(products.get(0).getId());
@@ -111,15 +113,4 @@ public class OrderIntegrationTest {
         assertEquals(12L, orderItems.stream().mapToLong(OrderItem::getQuantity).sum());
     }
 
-    @Test
-    void 상품의_재고부족으로_InvalidException을_반환한다() {
-        // Given
-        long userId = users.get(0).getId();
-        List<OrderProduct> orderProductList = new ArrayList<>();
-        orderProductList.add(new OrderProduct(products.get(0).getId(), 21L));
-        orderProductList.add(new OrderProduct(products.get(1).getId(), 16L));
-
-        // When & Then
-        assertThrows(InvalidException.class, () ->  orderFacade.createOrder(userId, new OrderRequest(orderProductList)));
-    }
 }

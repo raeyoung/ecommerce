@@ -2,16 +2,13 @@ package kr.hhplus.be.server.domain.product;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

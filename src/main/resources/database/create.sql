@@ -37,7 +37,7 @@ CREATE TABLE `hhplus_test`.`product` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `name` varchar(100) DEFAULT NULL,
     `price` bigint DEFAULT NULL,
-    `stock` int DEFAULT NULL,
+    `stock` bigint DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

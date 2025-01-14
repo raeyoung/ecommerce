@@ -11,10 +11,7 @@ import java.util.Optional;
 public interface ProductRepository {
 
     List<Product> findAll();
-
     Page<Product> findAll(Pageable pageable);
-
     Product save(Product product);
-
     Optional<Product> findById(Long id);
 }
