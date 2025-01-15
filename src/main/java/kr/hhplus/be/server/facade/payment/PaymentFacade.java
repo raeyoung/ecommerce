@@ -1,16 +1,12 @@
 package kr.hhplus.be.server.facade.payment;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponService;
-import kr.hhplus.be.server.domain.coupon.CouponStatus;
-import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
