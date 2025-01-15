@@ -56,8 +56,8 @@ public class OrderIntegrationTest {
 
     List<Product> products = new ArrayList<>();
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    void 동시에_6명이_하나의_물건을_주문하는_동시성_테스트를_진행한다() throws InterruptedException {
         users.add(userRepository.save(User.builder().name("하헌우").build()));
         users.add(userRepository.save(User.builder().name("허재").build()));
         users.add(userRepository.save(User.builder().name("이석범").build()));
@@ -74,10 +74,7 @@ public class OrderIntegrationTest {
 
         products.add(productRepository.save(Product.builder().name("롱패딩").price(550000L).stock(20L).build()));
         products.add(productRepository.save(Product.builder().name("맨투맨").price(35000L).stock(15L).build()));
-    }
 
-    @Test
-    void 동시에_6명이_하나의_물건을_주문하는_동시성_테스트를_진행한다() throws InterruptedException {
         // Given
         ExecutorService executorService = Executors.newFixedThreadPool(users.size());
         CountDownLatch latch = new CountDownLatch(users.size());

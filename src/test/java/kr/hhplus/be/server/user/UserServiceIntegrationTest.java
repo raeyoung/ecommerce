@@ -36,15 +36,11 @@ public class UserServiceIntegrationTest {
 
     Point point;
 
-    @BeforeEach
-    void setUp() {
-        user = userRepository.save(User.builder().name("하헌우").build());
-        point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
-    }
-
     @Test
     void 사용자가_잔액조회에_성공한다() {
         // Given
+        user = userRepository.save(User.builder().name("하헌우").build());
+        point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
         Long userId = user.getId();
 
         // When
@@ -60,6 +56,8 @@ public class UserServiceIntegrationTest {
     @Test
     void 사용자가_잔액충전에_성공한다() {
         // Given
+        user = userRepository.save(User.builder().name("하헌우").build());
+        point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
         Long userId = 1L; // 초기 데이터에 존재하는 사용자 ID
         Long initialAmount = 5000L; // 초기 잔액
         Long chargeAmount = 1000L; // 추가 충전 금액

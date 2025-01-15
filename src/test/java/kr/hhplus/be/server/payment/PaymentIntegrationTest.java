@@ -13,7 +13,6 @@ import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.facade.payment.PaymentFacade;
 import kr.hhplus.be.server.facade.user.UserFacade;
-import kr.hhplus.be.server.global.exception.NotFoundException;
 import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.IssuedCouponRepository;
 import kr.hhplus.be.server.domain.order.OrderRepository;
