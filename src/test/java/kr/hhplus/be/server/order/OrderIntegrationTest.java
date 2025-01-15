@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.integration.order;
+package kr.hhplus.be.server.order;
 
 import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.product.Product;

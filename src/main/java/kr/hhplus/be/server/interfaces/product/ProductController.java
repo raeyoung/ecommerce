@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.facade.product.ProductFacade;
+import kr.hhplus.be.server.global.model.CommonApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,17 @@ public class ProductController {
     @Operation(summary = "상품조회 API")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class)))
     @GetMapping()
-    public ResponseEntity<Page<ProductResponse>> products(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+    public CommonApiResponse<Page<ProductResponse>> products(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
                                                           @RequestParam(required = false, defaultValue = "price", value = "orderby") String criteria,
                                                           @RequestParam(required = false, defaultValue = "DESC", value = "sort") String sort) {
 
-        return ResponseEntity.ok(productFacade.products(page, criteria, sort));
+        return CommonApiResponse.success(productFacade.products(page, criteria, sort));
     }
 
     @Operation(summary = "상위 상품 조회 API")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductResponse.class))))
     @GetMapping("/top")
-    public ResponseEntity<List<ProductResponse>> topProducts() {
-        return ResponseEntity.ok(productFacade.popularProducts());
+    public CommonApiResponse<List<ProductResponse>> topProducts() {
+        return CommonApiResponse.success(productFacade.popularProducts());
     }
 }

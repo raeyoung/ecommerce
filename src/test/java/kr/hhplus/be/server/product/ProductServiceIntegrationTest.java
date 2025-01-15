@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.integration.product;
+package kr.hhplus.be.server.product;
 
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderItem;
@@ -13,7 +13,6 @@ import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,6 +66,7 @@ public class ProductServiceIntegrationTest {
         user = userRepository.save(User.builder().name("하헌우").build());
 
         point = pointRepository.save(Point.builder().userId(1L).currentAmount(10000L).build());
+        productRepository.deleteAll();
         products = productRepository.findAll();
 
         if(products.isEmpty()) {

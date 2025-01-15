@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.unit;
+package kr.hhplus.be.server.order;
 
 import kr.hhplus.be.server.domain.order.*;
 import kr.hhplus.be.server.domain.product.Product;

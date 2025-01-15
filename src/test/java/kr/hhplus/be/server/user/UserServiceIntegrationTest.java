@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.integration.user;
+package kr.hhplus.be.server.user;
 
 import kr.hhplus.be.server.domain.user.Point;
 import kr.hhplus.be.server.domain.user.User;
@@ -58,7 +58,7 @@ public class UserServiceIntegrationTest {
         // Given
         user = userRepository.save(User.builder().name("하헌우").build());
         point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
-        Long userId = 1L; // 초기 데이터에 존재하는 사용자 ID
+        Long userId = user.getId(); // 초기 데이터에 존재하는 사용자 ID
         Long initialAmount = 5000L; // 초기 잔액
         Long chargeAmount = 1000L; // 추가 충전 금액
         Long expectedAmount = initialAmount + chargeAmount; // 충전 후 예상 잔액

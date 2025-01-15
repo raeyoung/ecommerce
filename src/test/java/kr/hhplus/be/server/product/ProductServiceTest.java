@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.unit;
+package kr.hhplus.be.server.product;
 
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductService;
@@ -54,8 +54,8 @@ public class ProductServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(2);  // 두 개의 상품이 있어야 함
-        assertThat(result.getContent().get(0).getName()).isEqualTo("구스다운 패딩");  // 내림차순으로 정렬되어야 함
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("구스다운 패딩");
         assertThat(result.getContent().get(1).getName()).isEqualTo("후드티");
     }
 
@@ -102,9 +102,9 @@ public class ProductServiceTest {
         Page<ProductResponse> result = productService.products(0, "price", "DESC");
 
         // Then
-        assertThat(result.getContent()).hasSize(3); // Mock 데이터 크기 확인
-        assertThat(result.getContent().get(0).getName()).isEqualTo("구스다운 패딩"); // 첫 번째 상품 확인
-        assertThat(result.getContent().get(0).getPrice()).isEqualTo(500000L); // 첫 번째 상품 가격 확인
-        assertThat(result.getContent().get(1).getName()).isEqualTo("후드티"); // 두 번째 상품 확인
+        assertThat(result.getContent()).hasSize(3);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("구스다운 패딩");
+        assertThat(result.getContent().get(0).getPrice()).isEqualTo(500000L);
+        assertThat(result.getContent().get(1).getName()).isEqualTo("후드티");
     }
 }
