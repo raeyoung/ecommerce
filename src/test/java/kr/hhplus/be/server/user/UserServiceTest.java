@@ -43,7 +43,7 @@ public class UserServiceTest {
         // given
         User user = User.builder()
                 .id(1L)
-                .name("하헌우")
+                .name("김래영")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -60,7 +60,7 @@ public class UserServiceTest {
         assertThat(response).isNotNull();
         assertThat(response.getUserId()).isEqualTo(1L);
         assertThat(response.getCurrentAmount()).isEqualTo(5000L);
-        assertThat(response.getName()).isEqualTo("하헌우");
+        assertThat(response.getName()).isEqualTo("김래영");
     }
 
     @Test

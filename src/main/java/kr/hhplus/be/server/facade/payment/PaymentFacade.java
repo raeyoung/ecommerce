@@ -14,49 +14,49 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-    public class PaymentFacade {
+public class PaymentFacade {
 
-        private final OrderService orderService;
+    private final OrderService orderService;
 
-        private final PaymentService paymentService;
+    private final PaymentService paymentService;
 
-        private final UserService userService;
+    private final UserService userService;
 
-        private final CouponService couponService;
+    private final CouponService couponService;
 
-        public PaymentFacade(OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
-            this.orderService = orderService;
-            this.paymentService = paymentService;
-            this.userService = userService;
-            this.couponService = couponService;
+    public PaymentFacade(OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
+        this.orderService = orderService;
+        this.paymentService = paymentService;
+        this.userService = userService;
+        this.couponService = couponService;
+    }
+
+    @Transactional
+    public PaymentResponse payment(long userId, PaymentRequest request) {
+        // 주문 검증
+        Order order = orderService.getValidatedOrder(request.orderId(), OrderStatus.WAITING);
+
+        // 쿠폰 처리
+        long discountAmount = couponService.processCoupon(userId, request.couponId());
+
+        // 포인트 사용
+        if (discountAmount > 0) {
+            PointRequest pointRequest = new PointRequest(userId, discountAmount);
+            userService.usePoint(pointRequest);
         }
 
-        @Transactional
-        public PaymentResponse payment(long userId, PaymentRequest request) {
-            // 주문 검증
-            Order order = orderService.getValidatedOrder(request.orderId(), OrderStatus.WAITING);
+        // 주문 상태 업데이트
+        orderService.updateOrderStatus(OrderStatus.COMPLETED, order);
 
-            // 쿠폰 처리
-            long discountAmount = couponService.processCoupon(userId, request.couponId());
+        // 결제 처리
+        Payment payment = paymentService.processPayment(userId, order);
 
-            // 포인트 사용
-            if (discountAmount > 0) {
-                PointRequest pointRequest = new PointRequest(userId, discountAmount);
-                userService.usePoint(pointRequest);
-            }
+        sendToPlatform();
 
-            // 주문 상태 업데이트
-            orderService.updateOrderStatus(OrderStatus.COMPLETED, order);
+        return PaymentResponse.from(payment);
+    }
 
-            // 결제 처리
-            Payment payment = paymentService.processPayment(userId, order);
-
-            sendToPlatform();
-
-            return PaymentResponse.from(payment);
-        }
-
-        public void sendToPlatform () {
-            System.out.println("결재 정보가 데이터 플랫폼에 전송되었습니다.");
-        }
+    public void sendToPlatform () {
+        System.out.println("결재 정보가 데이터 플랫폼에 전송되었습니다.");
+    }
 }

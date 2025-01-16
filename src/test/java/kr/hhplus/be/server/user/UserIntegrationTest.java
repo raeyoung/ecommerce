@@ -7,7 +7,6 @@ import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
-public class UserServiceIntegrationTest {
+public class UserIntegrationTest {
 
     @Autowired
     UserService userService;
@@ -39,7 +38,7 @@ public class UserServiceIntegrationTest {
     @Test
     void 사용자가_잔액조회에_성공한다() {
         // Given
-        user = userRepository.save(User.builder().name("하헌우").build());
+        user = userRepository.save(User.builder().name("김래영").build());
         point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
         Long userId = user.getId();
 
@@ -50,13 +49,13 @@ public class UserServiceIntegrationTest {
         assertThat(point, is(notNullValue()));
         assertThat(point.getUserId(), is(userId));
         assertThat(point.getCurrentAmount(), is(5000L));
-        assertThat(point.getName(), is("하헌우"));
+        assertThat(point.getName(), is("김래영"));
     }
 
     @Test
     void 사용자가_잔액충전에_성공한다() {
         // Given
-        user = userRepository.save(User.builder().name("하헌우").build());
+        user = userRepository.save(User.builder().name("김래영").build());
         point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(5000L).build());
         Long userId = user.getId(); // 초기 데이터에 존재하는 사용자 ID
         Long initialAmount = 5000L; // 초기 잔액

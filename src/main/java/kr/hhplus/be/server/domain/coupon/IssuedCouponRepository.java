@@ -6,12 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public interface IssuedCouponRepository {
 
     Optional<IssuedCoupon> findById(long id);
+
+    List<IssuedCoupon> findByCouponId(long id);
 
     Optional<IssuedCoupon> findByUserIdAndCouponId(Long userId, Long couponId);
 

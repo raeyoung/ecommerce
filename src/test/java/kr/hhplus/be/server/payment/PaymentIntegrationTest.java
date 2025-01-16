@@ -75,60 +75,32 @@ public class PaymentIntegrationTest {
     @Autowired
     IssuedCouponRepository issuedCouponRepository;
 
-    User user;
-
-    Point point;
-
-    Product product;
-
-    IssuedCoupon issuedCoupon;
-
-    Coupon coupon;
-
-    Order order;
-
-    @BeforeEach
-    void setUp() {
-        long couponId = 1L;
-        long userId = 1L;
-        user = userRepository.save(User.builder()
-                .name("하헌우")
-                .build());
-
-        point = pointRepository.save(Point.builder().userId(1L).currentAmount(0L).build());
-        product = productRepository.save(Product.builder().name("후드티").price(50000L).stock(10L).build());
-
-        coupon = Coupon.builder()
-                .id(couponId)
+    @Test
+    void 결제에_성공한다() {
+        // Given
+        User user = userRepository.save(User.builder().name("김래영").build());
+        Point point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(0L).build());
+        Product product = productRepository.save(Product.builder().name("후드티").price(50000L).stock(10L).build());
+        Coupon coupon = couponRepository.save(Coupon.builder()
                 .name("설날맞이 10,000원 할인쿠폰")
                 .discountAmount(10000L)
                 .stock(10)
                 .issuedAt(LocalDateTime.now())
                 .expirationAt(LocalDateTime.now().plusDays(7))
-                .build();
-        couponRepository.save(coupon);
-
-        CouponRequest request = new CouponRequest(couponId, userId);
-        issuedCoupon = IssuedCoupon.builder()
-                .userId(request.userId())
-                .couponId(couponId)
+                .build());
+        IssuedCoupon issuedCoupon = issuedCouponRepository.save(IssuedCoupon.builder()
+                .userId(user.getId())
+                .couponId(coupon.getId())
                 .status(CouponStatus.AVAILABLE)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .build();
-        issuedCouponRepository.save(issuedCoupon);
-
-        order = orderRepository.save(Order.create(user.getId()));
+                .build());
+        Order order = orderRepository.save(Order.create(user.getId()));
         OrderItem orderItem = OrderItem.create(2L, product);
         orderItem.setOrderId(order.getOrderId());
         order.addOrderItem(orderItem);
-
         orderItemRepository.save(orderItem);
-    }
 
-    @Test
-    void 결제에_성공한다() {
-        // Given
         long userId = user.getId();
         long orderId = order.getOrderId();
         long couponId = issuedCoupon.getId();
@@ -146,6 +118,22 @@ public class PaymentIntegrationTest {
     @Test
     void 주문이_존재하지_않는_경우_IllegalStateException를_반환한다() {
         // Given
+        User user = userRepository.save(User.builder().name("하헌우").build());
+        Coupon coupon = couponRepository.save(Coupon.builder()
+                .name("설날맞이 10,000원 할인쿠폰")
+                .discountAmount(10000L)
+                .stock(10)
+                .issuedAt(LocalDateTime.now())
+                .expirationAt(LocalDateTime.now().plusDays(7))
+                .build());
+        IssuedCoupon issuedCoupon = issuedCouponRepository.save(IssuedCoupon.builder()
+                .userId(user.getId())
+                .couponId(coupon.getId())
+                .status(CouponStatus.AVAILABLE)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build());
+
         long userId = user.getId();
         long orderId = 0L;
         long couponId = issuedCoupon.getId();
@@ -157,6 +145,29 @@ public class PaymentIntegrationTest {
     @Test
     void 동일한_사용자가_동시에_동일한_주문에_대해_5회_결제한_경우_1회만_결제하는_동시성_테스트를_성공한다() throws InterruptedException {
         // Given
+        User user = userRepository.save(User.builder().name("하헌우").build());
+        Point point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(0L).build());
+        Product product = productRepository.save(Product.builder().name("후드티").price(50000L).stock(10L).build());
+        Coupon coupon = couponRepository.save(Coupon.builder()
+                .name("설날맞이 10,000원 할인쿠폰")
+                .discountAmount(10000L)
+                .stock(10)
+                .issuedAt(LocalDateTime.now())
+                .expirationAt(LocalDateTime.now().plusDays(7))
+                .build());
+        IssuedCoupon issuedCoupon = issuedCouponRepository.save(IssuedCoupon.builder()
+                .userId(user.getId())
+                .couponId(coupon.getId())
+                .status(CouponStatus.AVAILABLE)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build());
+        Order order = orderRepository.save(Order.create(user.getId()));
+        OrderItem orderItem = OrderItem.create(2L, product);
+        orderItem.setOrderId(order.getOrderId());
+        order.addOrderItem(orderItem);
+        orderItemRepository.save(orderItem);
+
         long userId = user.getId();
         long orderId = order.getOrderId();
         long couponId = issuedCoupon.getId();

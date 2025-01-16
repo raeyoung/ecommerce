@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
-public class ProductServiceIntegrationTest {
+public class ProductIntegrationTest {
 
     @Autowired
     ProductFacade productFacade;
@@ -63,7 +63,7 @@ public class ProductServiceIntegrationTest {
     @Test
     void 상품_목록을_조회에_성공한다() {
         // Given
-        user = userRepository.save(User.builder().name("하헌우").build());
+        user = userRepository.save(User.builder().name("김래영").build());
 
         point = pointRepository.save(Point.builder().userId(1L).currentAmount(10000L).build());
         productRepository.deleteAll();

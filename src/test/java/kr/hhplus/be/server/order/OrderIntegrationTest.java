@@ -24,6 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -96,7 +98,7 @@ public class OrderIntegrationTest {
             });
         }
 
-        // 기다림 추가
+        // 모든 스레드가 완료될 때까지 대기
         latch.await(60, TimeUnit.SECONDS); // 대기 시간 제한
         executorService.shutdown();
         if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
@@ -106,7 +108,7 @@ public class OrderIntegrationTest {
         // Then
         List<OrderItem> orderItems = orderItemRepository.findByProductId(products.get(0).getId());
 
-        assertEquals(users.size(), orderItems.size());
+        assertThat(users.size()).isEqualTo(orderItems.size());
         assertEquals(12L, orderItems.stream().mapToLong(OrderItem::getQuantity).sum());
     }
 

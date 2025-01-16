@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IssuedCouponJpaRepository extends JpaRepository<IssuedCoupon, Long>  {
@@ -15,6 +16,8 @@ public interface IssuedCouponJpaRepository extends JpaRepository<IssuedCoupon, L
     Optional<IssuedCoupon> findByUserIdAndCouponId(Long userId, Long couponId);
 
     Page<IssuedCoupon> findByUserId(long userId, Pageable pageable);
+
+    List<IssuedCoupon> findByCouponId(long id);
 
     @Query("SELECT new kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse(ic.id, ic.couponId, ic.status, c.issuedAt, c.expirationAt) " +
             "FROM IssuedCoupon ic " +

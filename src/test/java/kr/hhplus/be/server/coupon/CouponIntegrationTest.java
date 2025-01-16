@@ -16,6 +16,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -23,7 +31,7 @@ import static org.assertj.core.api.Assertions.*;
 @Testcontainers
 @Transactional
 @ActiveProfiles("test")
-public class CouponServiceIntegrationTest {
+public class CouponIntegrationTest {
 
     @Autowired
     CouponService couponService;
@@ -42,7 +50,7 @@ public class CouponServiceIntegrationTest {
         long userId = 1L;
         long couponId = 1L;
 
-        Coupon coupon = Coupon.builder()
+        coupon = Coupon.builder()
                 .id(couponId)
                 .name("설날맞이 10,000원 할인쿠폰")
                 .discountAmount(1000L)
@@ -72,6 +80,73 @@ public class CouponServiceIntegrationTest {
         assertThat(issuedCoupon.getUserId()).isEqualTo(userId);
         assertThat(issuedCoupon.getCouponId()).isEqualTo(couponId);
         assertThat(issuedCoupon.getStatus()).isEqualTo(CouponStatus.AVAILABLE);
+    }
+
+    @Test
+    @Transactional
+    void 동시에_5명이_하나의_쿠폰을_발급하는_동시성_테스트를_진행한다() throws InterruptedException {
+        // Given
+        int threadCount = 5; // 동시 요청 스레드 수
+        long couponId = 1L; // 테스트할 쿠폰 ID
+        int initialStock = 1; // 쿠폰 초기 재고 (1개)
+
+        // 쿠폰 초기화
+        Coupon coupon = Coupon.builder()
+                .id(couponId)
+                .name("설날맞이 10,000원 할인쿠폰")
+                .discountAmount(10000L)
+                .stock(initialStock)
+                .issuedAt(LocalDateTime.now())
+                .expirationAt(LocalDateTime.now().plusDays(7))
+                .build();
+        couponRepository.save(coupon);
+
+        // 스레드 풀과 CountDownLatch 생성
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        // 5명의 사용자가 쿠폰 발급을 요청하는 부분
+        AtomicInteger successCount = new AtomicInteger(0); // 성공한 요청 수
+
+        // When
+        for (int i = 0; i < threadCount; i++) {
+            long userId = i + 1; // 각 스레드마다 다른 사용자 ID 사용
+            executorService.submit(() -> {
+                try {
+                    CouponRequest request = new CouponRequest(userId, couponId);
+                    couponService.issueCoupon(request);
+                    successCount.incrementAndGet(); // 쿠폰 발급 성공한 경우
+                } catch (Exception e) {
+                    // 예외 발생 시 무시 (중복 발급 또는 재고 소진 예외)
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        // 모든 스레드가 완료될 때까지 대기
+        latch.await(60, TimeUnit.SECONDS); // 대기 시간 제한
+        executorService.shutdown();
+        if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+            executorService.shutdownNow(); // 강제 종료
+        }
+
+        // Then
+        assertThat(successCount.get()).isEqualTo(1);
+
+        List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findByCouponId(couponId);
+        assertThat(issuedCoupons.size()).isEqualTo(1);
+
+        // 발급된 쿠폰이 저장되었는지 확인
+        IssuedCoupon savedCoupon = issuedCoupons.get(0);
+        assertThat(savedCoupon.getCouponId()).isEqualTo(couponId);
+        assertThat(savedCoupon.getStatus()).isEqualTo(CouponStatus.AVAILABLE);
+
+        // 발급된 쿠폰이 1명에게만 발급되었는지 확인
+        Set<Long> userIds = issuedCoupons.stream()
+                .map(IssuedCoupon::getUserId)
+                .collect(Collectors.toSet());
+        assertThat(userIds.size()).isEqualTo(1);
     }
 
     @Test
