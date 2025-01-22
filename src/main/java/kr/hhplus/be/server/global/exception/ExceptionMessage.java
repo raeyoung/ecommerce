@@ -18,7 +18,9 @@ public enum ExceptionMessage {
     USER_NOT_FOUND("사용자를 찾을 수 없습니다."),
     POINT_NOT_FOUND("해당 사용자의 포인트 정보를 찾을 수 없습니다."),
     ORDER_NOT_FOUND("존재하지 않는 주문입니다."),
-    ORDER_ALREADY_PAYMENT("이미 결제된 주문입니다.");
+    ORDER_ALREADY_PAYMENT("이미 결제된 주문입니다."),
+    PRODUCT_REDUCE_FAILED("상품 재고 감소에 실패하였습니다."),
+    REDIS_LOCK_ACQUIRE_FAILED("레디스 락 획득에 실패하였습니다.");
 
     String message;
 }

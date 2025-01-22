@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
+import kr.hhplus.be.server.global.annotation.RedissonLock;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.springframework.cache.annotation.CachePut;
@@ -56,7 +57,7 @@ public class ProductService {
      * @param quantity
      * @return
      */
-    @CachePut(cacheNames = "products", key = "#productId")
+    @RedissonLock(key = "'product'.concat(':').concat(#productId)")
     public Product reduceProduct(long productId, long quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.PRODUCT_NOT_FOUND.getMessage()));

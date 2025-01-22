@@ -40,6 +40,9 @@ dependencies {
 	// swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
+	// Redis
+	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
+
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
