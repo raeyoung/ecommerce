@@ -14,8 +14,8 @@ public class UserFacade {
         this.userService = userService;
     }
 
-    public PointResponse point(long userId) {
-        return userService.point(userId);
+    public PointResponse getPoint(long userId) {
+        return PointResponse.of(userService.getPoint(userId));
     }
 
     public PointResponse chargePoint(PointRequest request) {

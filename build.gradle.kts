@@ -43,6 +43,9 @@ dependencies {
 	// Redis
 	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
 
+	// Retry
+	implementation("org.springframework.retry:spring-retry")
+
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")

@@ -27,7 +27,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PointResponse.class)))
     @GetMapping("/point/{userId}")
     public CommonApiResponse<PointResponse> point(@PathVariable long userId) {
-        return CommonApiResponse.success(userFacade.point(userId));
+        return CommonApiResponse.success(userFacade.getPoint(userId));
     }
 
     @Operation(summary = "잔액 충전 API")

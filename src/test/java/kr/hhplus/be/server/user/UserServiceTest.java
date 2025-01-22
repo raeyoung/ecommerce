@@ -41,41 +41,29 @@ public class UserServiceTest {
     @Test
     void 사용자가_잔액조회에_성공한다() {
         // given
-        User user = User.builder()
-                .id(1L)
-                .name("김래영")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
         Point userPoint = new Point(1L, 5000L);  // 잔액 5000
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);
+        when(userPointRepository.findByUserId(1L)).thenReturn(Optional.of(userPoint));
 
         // when: 서비스 메서드 호출
-        PointResponse response = userService.point(1L);
+        Point point = userService.getPoint(1L);
 
         // then: 응답 값 검증
-        assertThat(response).isNotNull();
-        assertThat(response.getUserId()).isEqualTo(1L);
-        assertThat(response.getCurrentAmount()).isEqualTo(5000L);
-        assertThat(response.getName()).isEqualTo("김래영");
+        assertThat(point).isNotNull();
+        assertThat(point.getUserId()).isEqualTo(1L);
+        assertThat(point.getCurrentAmount()).isEqualTo(5000L);
     }
 
     @Test
     void 존재하지_않는_사용자의_경우_IllegalArgumentException_반환한다() {
-        // given
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // when & then
         try {
-            userService.point(1L);
+            userService.getPoint(1L);
         } catch (IllegalStateException ex) {
             // then
             assertThat(ex.getMessage()).isEqualTo("사용자를 찾을 수 없습니다.");
         }
     }
+
 
     @Test
     void 사용자가_잔액을_충전을_성공한다() {
@@ -89,8 +77,7 @@ public class UserServiceTest {
         Point userPoint = new Point(1L, 5000L);         // 잔액 5000
         PointRequest request = new PointRequest(1L, 1000L);     // 충전액 1000
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);
+        when(userPointRepository.findByUserId(1L)).thenReturn(Optional.of(userPoint));
 
         // when
         PointResponse response = userService.chargePoint(request);
@@ -117,8 +104,7 @@ public class UserServiceTest {
         PointRequest request = new PointRequest(1L, -100L);  // 음수 금액
 
         // userRepository와 userPointRepository의 mock 설정
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userPointRepository.findByUserId(1L)).thenReturn(userPoint);  // 기존 userPoint를 반환
+        when(userPointRepository.findByUserId(1L)).thenReturn(Optional.of(userPoint));  // 기존 userPoint를 반환
 
         // when & then: 예외가 발생하는지 확인
         assertThrows(IllegalArgumentException.class, () -> {

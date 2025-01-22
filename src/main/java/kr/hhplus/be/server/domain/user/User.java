@@ -21,7 +21,4 @@ public class User {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @Version
-    private Long version;
 }

@@ -24,8 +24,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest
 @Testcontainers
@@ -62,24 +62,22 @@ public class CouponIntegrationTest {
 
         issuedCouponRepository.deleteAll();
 
-        assertThat(issuedCouponRepository.findByUserIdAndCouponId(userId, couponId)).isEmpty();
-
         CouponRequest request = new CouponRequest(userId, couponId);
 
         // When
         String result = couponService.issueCoupon(request);
 
         // Then
-        assertThat(result).isEqualTo("쿠폰 발급이 완료되었습니다.");
+        assertThat(result, is("쿠폰 발급이 완료되었습니다."));
 
         Coupon updatedCoupon = couponRepository.findById(couponId);
-        assertThat(updatedCoupon.getStock()).isEqualTo(9);
+        assertThat(updatedCoupon.getStock(), is(9));
 
         IssuedCoupon issuedCoupon = issuedCouponRepository.findByUserIdAndCouponId(userId, couponId)
                 .orElseThrow();
-        assertThat(issuedCoupon.getUserId()).isEqualTo(userId);
-        assertThat(issuedCoupon.getCouponId()).isEqualTo(couponId);
-        assertThat(issuedCoupon.getStatus()).isEqualTo(CouponStatus.AVAILABLE);
+        assertThat(issuedCoupon.getUserId(), is(userId));
+        assertThat(issuedCoupon.getCouponId(), is(couponId));
+        assertThat(issuedCoupon.getStatus(), is(CouponStatus.AVAILABLE));
     }
 
     @Test
@@ -132,21 +130,21 @@ public class CouponIntegrationTest {
         }
 
         // Then
-        assertThat(successCount.get()).isEqualTo(1);
+        assertThat(successCount.get(), is(1));
 
         List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findByCouponId(couponId);
-        assertThat(issuedCoupons.size()).isEqualTo(1);
+        assertThat(issuedCoupons.size(), is(1));
 
         // 발급된 쿠폰이 저장되었는지 확인
         IssuedCoupon savedCoupon = issuedCoupons.get(0);
-        assertThat(savedCoupon.getCouponId()).isEqualTo(couponId);
-        assertThat(savedCoupon.getStatus()).isEqualTo(CouponStatus.AVAILABLE);
+        assertThat(savedCoupon.getCouponId(), is(couponId));
+        assertThat(savedCoupon.getStatus(), is(CouponStatus.AVAILABLE));
 
         // 발급된 쿠폰이 1명에게만 발급되었는지 확인
         Set<Long> userIds = issuedCoupons.stream()
                 .map(IssuedCoupon::getUserId)
                 .collect(Collectors.toSet());
-        assertThat(userIds.size()).isEqualTo(1);
+        assertThat(userIds.size(), is(1));
     }
 
     @Test
@@ -160,9 +158,8 @@ public class CouponIntegrationTest {
         Page<IssuedCouponResponse> result = couponService.getIssuedCoupons(userId, page, size);
 
         // Then
-        assertThat(result).isNotEmpty();
-        assertThat(result.getContent()).hasSize(2); // 사용자 ID가 1인 사용자는 두 개의 쿠폰을 가지고 있어야 함
-        assertThat(result.getContent().get(0).getCouponId()).isEqualTo(1L); // 첫 번째 쿠폰 ID가 1이어야 함
-        assertThat(result.getContent().get(1).getCouponId()).isEqualTo(2L); // 두 번째 쿠폰 ID가 2이어야 함
+        assertThat(result.getContent().size(), is(2)); // 사용자 ID가 1인 사용자는 두 개의 쿠폰을 가지고 있어야 함
+        assertThat(result.getContent().get(0).getCouponId(), is(1L)); // 첫 번째 쿠폰 ID가 1이어야 함
+        assertThat(result.getContent().get(1).getCouponId(),is(2L)); // 두 번째 쿠폰 ID가 2이어야 함
     }
 }

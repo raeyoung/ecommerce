@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
+import kr.hhplus.be.server.facade.user.UserFacade;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
 import org.junit.jupiter.api.Test;
@@ -13,14 +14,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
 public class UserIntegrationTest {
+
+    @Autowired
+    UserFacade userFacade;
 
     @Autowired
     UserService userService;
@@ -43,13 +52,12 @@ public class UserIntegrationTest {
         Long userId = user.getId();
 
         // When
-        PointResponse point = userService.point(userId);
+        Point point = userService.getPoint(userId);
 
         // Then
         assertThat(point, is(notNullValue()));
         assertThat(point.getUserId(), is(userId));
         assertThat(point.getCurrentAmount(), is(5000L));
-        assertThat(point.getName(), is("김래영"));
     }
 
     @Test
@@ -73,8 +81,42 @@ public class UserIntegrationTest {
         assertThat(response.getCurrentAmount(), is(expectedAmount)); // 충전 후 잔액이 예상 값과 같은지 검증
 
         // 데이터베이스에서 실제 잔액 검증
-        Point userPoint = pointRepository.findByUserId(userId);
+        Point userPoint = pointRepository.findByUserId(userId).orElseThrow();
         assertThat(userPoint, is(notNullValue())); // UserPoint가 null이 아닌지 검증
         assertThat(userPoint.getCurrentAmount(), is(expectedAmount)); // DB의 잔액이 예상 값과 같은지 검증
     }
+
+    @Test
+    void 동일한_사용자가_동시에_포인트_충전을_5회_요청한_경우_순차적으로_충전하는_동시성_테스트를_진행한다() throws InterruptedException {
+        // Given
+        user = userRepository.save(User.builder().name("김래영").build());
+        point = pointRepository.save(Point.builder().userId(user.getId()).currentAmount(0L).build());
+
+        long userId = user.getId();
+        long amount = 1L;
+        int tryCount = 5;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(tryCount);
+        CountDownLatch latch = new CountDownLatch(tryCount);
+
+        // When
+        for (int i = 0; i < tryCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    userFacade.chargePoint(new PointRequest(userId, amount));
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+
+        PointResponse response = userFacade.getPoint(userId);
+
+        // Then
+        assertEquals(amount * tryCount, response.getCurrentAmount());
+    }
+
 }

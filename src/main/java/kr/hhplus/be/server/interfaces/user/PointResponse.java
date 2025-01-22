@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.user.Point;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Builder
 @Getter
@@ -15,8 +16,6 @@ public class PointResponse {
 
     Long userId;
 
-    String name;
-
     Long currentAmount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -25,13 +24,15 @@ public class PointResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDateTime updatedAt;
 
-    public static PointResponse of(Point point, User user) {
+    Long version;
+
+    public static PointResponse of(Point point) {
         return PointResponse.builder()
-                .userId(user.getId())
-                .name(user.getName())
+                .userId(point.getUserId())
                 .currentAmount(point.getCurrentAmount())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .version(point.getVersion())
                 .build();
     }
 
@@ -41,6 +42,7 @@ public class PointResponse {
                 .currentAmount(point.getCurrentAmount())
                 .createdAt(point.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
+                .version(point.getVersion())
                 .build();
     }
 }

@@ -3,10 +3,14 @@ package kr.hhplus.be.server.domain.user;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,17 +31,9 @@ public class UserService {
      * @param userId
      * @return
      */
-    public PointResponse point(long userId) {
-        // 사용자 검증
-        User user = userRepository.findById(userId)
+    public Point getPoint(long userId) {
+        return pointRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
-
-        Point userPoint = pointRepository.findByUserId(userId);
-        // UserPoint가 없으면 예외 처리 (혹은 기본 값 처리)
-        if (userPoint == null) {
-            throw new IllegalStateException(ExceptionMessage.POINT_NOT_FOUND.getMessage());
-        }
-        return PointResponse.of(userPoint, user);
     }
 
     /**
@@ -46,16 +42,19 @@ public class UserService {
      * @return
      */
     @Transactional
+    @Retryable(
+            retryFor = {ObjectOptimisticLockingFailureException.class},
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500)
+    )
     public PointResponse chargePoint(PointRequest request) {
         // 사용자 검증
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
-
-        Point userPoint = pointRepository.findByUserId(user.getId());
+        Point userPoint = pointRepository.findByUserId(request.userId())
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));;
 
         // UserPoint가 존재하지 않으면 새로 생성
         if (userPoint == null) {
-            userPoint = new Point(user.getId(), 0L); // 초기 잔액은 0
+            userPoint = new Point(request.userId(), 0L); // 초기 잔액은 0
             userPoint.setCreatedAt(LocalDateTime.now()); // createdAt 설정
             userPoint.setUpdatedAt(LocalDateTime.now()); // updatedAt 설정
         }
@@ -67,7 +66,7 @@ public class UserService {
         pointRepository.save(userPoint);
 
         // UserPointHistory 기록 (충전 내역)
-        PointHistory userPointHistory = PointHistory.createCharge(user.getId(), request.amount());
+        PointHistory userPointHistory = PointHistory.createCharge(request.userId(), request.amount());
         userPointHistory.setCurrentAmount(userPoint.getCurrentAmount());
 
         pointHistoryRepository.save(userPointHistory);

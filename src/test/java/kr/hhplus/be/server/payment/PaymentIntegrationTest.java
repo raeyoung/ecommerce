@@ -194,7 +194,7 @@ public class PaymentIntegrationTest {
         latch.await();
         executorService.shutdown();
 
-        PointResponse pointResponse = userFacade.point(userId);
+        PointResponse pointResponse = userFacade.getPoint(userId);
 
         // Then
         assertThat(amount - coupon.getDiscountAmount()).isEqualTo(pointResponse.getCurrentAmount());
