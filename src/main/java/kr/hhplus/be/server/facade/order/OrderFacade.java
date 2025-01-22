@@ -22,7 +22,6 @@ public class OrderFacade {
         this.productService = productService;
     }
 
-    @Transactional
     public OrderResponse createOrder(long userId, OrderRequest request) {
         List<OrderItem> orderItems = request.orderProductList()
                 .stream()
