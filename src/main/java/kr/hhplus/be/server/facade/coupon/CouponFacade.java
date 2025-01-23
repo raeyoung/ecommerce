@@ -2,6 +2,7 @@ package kr.hhplus.be.server.facade.coupon;
 
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
+import kr.hhplus.be.server.global.annotation.RedissonLock;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ public class CouponFacade {
         this.couponService = couponService;
     }
 
+    @RedissonLock(key = "'coupon:' + #request.couponId() + ':user:' + #request.userId()")
     public String issueCoupon(CouponRequest request) {
         return couponService.issueCoupon(request);
     }

@@ -53,7 +53,7 @@ public class CouponServiceTest {
                 .expirationAt(LocalDateTime.now().plusDays(7))
                 .build();
 
-        when(couponRepository.findAvailableCouponForUpdate(couponId)).thenReturn(Optional.of(coupon));
+        when(couponRepository.findAvailableCoupon(couponId)).thenReturn(Optional.of(coupon));
         when(issuedCouponRepository.findByUserIdAndCouponId(userId, couponId)).thenReturn(Optional.empty());
 
         CouponRequest request = new CouponRequest(userId, couponId);
@@ -74,7 +74,7 @@ public class CouponServiceTest {
         long userId = 1L;
         long couponId = 1L;
 
-        when(couponRepository.findAvailableCouponForUpdate(couponId)).thenReturn(Optional.empty());
+        when(couponRepository.findAvailableCoupon(couponId)).thenReturn(Optional.empty());
 
         CouponRequest request = new CouponRequest(userId, couponId);
 
@@ -82,7 +82,7 @@ public class CouponServiceTest {
         assertThatThrownBy(() -> couponService.issueCoupon(request))
                 .isInstanceOf(IllegalStateException.class);
 
-        verify(couponRepository, times(1)).findAvailableCouponForUpdate(couponId);
+        verify(couponRepository, times(1)).findAvailableCoupon(couponId);
         verify(issuedCouponRepository, never()).save(any());
     }
 
@@ -108,7 +108,7 @@ public class CouponServiceTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(couponRepository.findAvailableCouponForUpdate(couponId)).thenReturn(Optional.of(coupon));
+        when(couponRepository.findAvailableCoupon(couponId)).thenReturn(Optional.of(coupon));
         when(issuedCouponRepository.findByUserIdAndCouponId(userId, couponId)).thenReturn(Optional.of(issuedCoupon));
 
         CouponRequest request = new CouponRequest(userId, couponId);

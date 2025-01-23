@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,7 @@ import java.util.Optional;
 @Component
 public interface CouponRepository {
 
-    Optional<Coupon> findAvailableCouponForUpdate(@Param("couponId") Long couponId);
+    Optional<Coupon> findAvailableCoupon(@Param("couponId") Long couponId);
 
     Coupon findByIdWithLock(@Param("couponId") long couponId);
 

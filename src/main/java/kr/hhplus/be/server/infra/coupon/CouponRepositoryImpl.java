@@ -14,8 +14,8 @@ public class CouponRepositoryImpl implements CouponRepository {
     private final CouponJpaRepository couponJpaRepository;
 
     @Override
-    public Optional<Coupon> findAvailableCouponForUpdate(Long couponId) {
-        return couponJpaRepository.findAvailableCouponForUpdate(couponId);
+    public Optional<Coupon> findAvailableCoupon(Long couponId) {
+        return couponJpaRepository.findAvailableCoupon(couponId);
     }
 
     @Override

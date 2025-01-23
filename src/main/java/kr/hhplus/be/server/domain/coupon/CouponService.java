@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import kr.hhplus.be.server.global.annotation.RedissonLock;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
@@ -27,18 +28,17 @@ public class CouponService {
      * @param request
      * @return
      */
-    @Transactional
     public String issueCoupon(CouponRequest request) {
-        // 비관적 락을 사용하여 쿠폰 데이터 조회
-        Coupon coupon = couponRepository.findAvailableCouponForUpdate(request.couponId())
+        // 쿠폰 데이터 조회
+        Coupon coupon = couponRepository.findAvailableCoupon(request.couponId())
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.COUPON_SOLD_OUT.getMessage()));
 
-        // 중복 발급 여부
+        // 중복 발급 여부 확인
         if (issuedCouponRepository.findByUserIdAndCouponId(request.userId(), request.couponId()).isPresent()) {
             throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_EXISTED.getMessage());
         }
 
-        // 재고를 감소
+        // 재고 감소
         coupon.setStock(coupon.getStock() - 1);
 
         // 발급된 쿠폰 저장

@@ -11,9 +11,8 @@ import java.util.Optional;
 
 public interface CouponJpaRepository extends JpaRepository<Coupon, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE) // 비관적 락 설정
     @Query("SELECT c FROM Coupon c WHERE c.id = :couponId AND c.stock > 0")
-    Optional<Coupon> findAvailableCouponForUpdate(@Param("couponId") Long couponId);
+    Optional<Coupon> findAvailableCoupon(@Param("couponId") Long couponId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE) // 비관적 락 설정
     @Query("SELECT c FROM Coupon c WHERE c.id = :couponId")
