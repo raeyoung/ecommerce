@@ -37,9 +37,9 @@ public class CouponService {
         if (issuedCouponRepository.findByUserIdAndCouponId(request.userId(), request.couponId()).isPresent()) {
             throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_EXISTED.getMessage());
         }
-
         // 재고 감소
-        coupon.setStock(coupon.getStock() - 1);
+        coupon.reduceStock(1);
+        couponRepository.save(coupon);
 
         // 발급된 쿠폰 저장
         IssuedCoupon issuedCoupon = IssuedCoupon.builder()
