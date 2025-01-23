@@ -4,14 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-fun getGitHash(): String {
-	return providers.exec {
-		commandLine("git", "rev-parse", "--short", "HEAD")
-	}.standardOutput.asText.get().trim()
-}
-
 group = "kr.hhplus.be"
-version = getGitHash()
 
 java {
 	toolchain {
@@ -43,6 +36,12 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
+	// swagger
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+
+	// Redis
+	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
 
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
