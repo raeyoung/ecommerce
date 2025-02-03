@@ -15,7 +15,6 @@ CREATE TABLE `hhplus_test`.`point` (
     `current_amount` bigint DEFAULT '0',
     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `version`   BIGINT      NOT NULL,
     PRIMARY KEY (`id`)
 );
 

@@ -10,7 +10,7 @@ public interface PointRepository {
 
     Optional<Point> findById(Long id);
 
-    Point findByUserIdWithLock(@Param("userId") Long userId);
+    Optional<Point> findByUserIdWithLock(@Param("userId") Long userId);
 
     Optional<Point> findByUserId(Long userId);
 

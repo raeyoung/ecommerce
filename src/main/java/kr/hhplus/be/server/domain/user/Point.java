@@ -27,9 +27,6 @@ public class Point {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Version
-    private Long version;
-
     public Point(long userId, long currentAmount) {
         this.userId = userId;
         this.currentAmount = currentAmount;

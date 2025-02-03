@@ -77,7 +77,7 @@ public class UserServiceTest {
         Point userPoint = new Point(1L, 5000L);         // 잔액 5000
         PointRequest request = new PointRequest(1L, 1000L);     // 충전액 1000
 
-        when(userPointRepository.findByUserId(1L)).thenReturn(Optional.of(userPoint));
+        when(userPointRepository.findByUserIdWithLock(1L)).thenReturn(Optional.of(userPoint));
 
         // when
         PointResponse response = userService.chargePoint(request);

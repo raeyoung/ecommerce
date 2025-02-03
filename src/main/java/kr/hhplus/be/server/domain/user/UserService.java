@@ -42,14 +42,9 @@ public class UserService {
      * @return
      */
     @Transactional
-    @Retryable(
-            retryFor = {ObjectOptimisticLockingFailureException.class},
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 500)
-    )
     public PointResponse chargePoint(PointRequest request) {
         // 사용자 검증
-        Point userPoint = pointRepository.findByUserId(request.userId())
+        Point userPoint = pointRepository.findByUserIdWithLock(request.userId())
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));;
 
         // UserPoint가 존재하지 않으면 새로 생성
@@ -85,7 +80,8 @@ public class UserService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
 
-        Point userPoint = pointRepository.findByUserIdWithLock(user.getId());
+        Point userPoint = pointRepository.findByUserIdWithLock(user.getId())
+                .orElseThrow(() -> new IllegalStateException(ExceptionMessage.USER_NOT_FOUND.getMessage()));;
 
         // UserPoint가 존재하지 않으면 새로 생성
         if (userPoint == null) {
