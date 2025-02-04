@@ -97,7 +97,7 @@ public class ProductIntegrationTest {
         int page = 0;
         String criteria = "price";
         String sort = "DESC";
-        Page<ProductResponse> products = productService.products(page, criteria, sort);  // 상품 금액 기준 내림차순 정렬
+        Page<ProductResponse> products = productService.getProducts(page, criteria, sort);  // 상품 금액 기준 내림차순 정렬
 
         // Then
         assertThat(products)

@@ -3,16 +3,12 @@ package kr.hhplus.be.server.domain.product;
 import kr.hhplus.be.server.global.annotation.RedissonLock;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +28,7 @@ public class ProductService {
      * @param sort
      * @return
      */
-    public Page<ProductResponse> products(int page, String criteria, String sort) {
+    public Page<ProductResponse> getProducts(int page, String criteria, String sort) {
         Pageable pageable = (sort.equals("ASC")) ?
                 PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, criteria));
@@ -47,7 +43,7 @@ public class ProductService {
      * @return
      */
     @Cacheable(cacheNames = "products", key = "#productId")
-    public Optional<Product> product(long productId) {
+    public Optional<Product> getProduct(long productId) {
         return productRepository.findById(productId);
     }
 
