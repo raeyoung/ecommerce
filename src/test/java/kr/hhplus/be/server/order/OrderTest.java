@@ -36,7 +36,7 @@ public class OrderTest {
                 .name("코트")
                 .price(500000L)
                 .build();
-        OrderItem orderItem = OrderItem.create(2, product);
+        OrderItem orderItem = OrderItem.create(2L, product);
         order = Order.create(1L);
 
         // when
@@ -61,8 +61,8 @@ public class OrderTest {
                 .price(30000L)
                 .build();
 
-        OrderItem orderItem1 = OrderItem.create(2, product1);
-        OrderItem orderItem2 = OrderItem.create(3, product2);
+        OrderItem orderItem1 = OrderItem.create(2L, product1);
+        OrderItem orderItem2 = OrderItem.create(3L, product2);
         order = Order.create(1L);
 
         order.addOrderItem(orderItem1);

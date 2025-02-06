@@ -19,5 +19,5 @@ public class OrderItemRequest {
 
     private Long productPrice;
 
-    private Integer quantity;
+    private Long quantity;
 }
