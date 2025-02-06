@@ -21,8 +21,8 @@ public class ProductFacade {
         this.orderService = orderService;
     }
 
-    public Page<ProductResponse> products(int page, String criteria, String sort) {
-        return productService.products(page, criteria, sort);
+    public Page<ProductResponse> getProducts(int page, String criteria, String sort) {
+        return productService.getProducts(page, criteria, sort);
     }
 
     public List<ProductResponse> popularProducts() {
@@ -31,7 +31,7 @@ public class ProductFacade {
 
         return orderService.getPopularProducts(startDateTime, endDateTime)
                 .stream()
-                .map(productId -> productService.product(productId)
+                .map(productId -> productService.getProduct(productId)
                         .orElse(Product.notAvailable(productId)))
                 .map(ProductResponse::from)
                 .toList();

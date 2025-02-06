@@ -1,13 +1,13 @@
 package kr.hhplus.be.server.interfaces.product;
 
 import kr.hhplus.be.server.domain.product.Product;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductResponse{
 
     Long id;

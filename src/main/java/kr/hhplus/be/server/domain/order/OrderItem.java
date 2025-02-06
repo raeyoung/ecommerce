@@ -36,7 +36,7 @@ public class OrderItem {
     private LocalDateTime updatedAt;
 
     // 주문 상품 생성
-    public static OrderItem create(long quantity, Product product) {
+    public static OrderItem create(Long quantity, Product product) {
         return OrderItem.builder()
                 .productId(product.getId())
                 .productName(product.getName())

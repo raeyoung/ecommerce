@@ -23,5 +23,5 @@ values
 /* Issued_coupon*/
 insert into `hhplus_test`.`issued_coupon` (user_id, coupon_id, status, created_at, updated_at)
 values
-    (1, 1, 'AVAILABLE', now(), now()),
-    (1, 2, 'AVAILABLE', now(), now());
+    (999, 1, 'AVAILABLE', now(), now()),
+    (999, 2, 'AVAILABLE', now(), now());

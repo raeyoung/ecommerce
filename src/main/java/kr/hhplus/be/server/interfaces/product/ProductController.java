@@ -33,7 +33,7 @@ public class ProductController {
                                                           @RequestParam(required = false, defaultValue = "price", value = "orderby") String criteria,
                                                           @RequestParam(required = false, defaultValue = "DESC", value = "sort") String sort) {
 
-        return CommonApiResponse.success(productFacade.products(page, criteria, sort));
+        return CommonApiResponse.success(productFacade.getProducts(page, criteria, sort));
     }
 
     @Operation(summary = "상위 상품 조회 API")

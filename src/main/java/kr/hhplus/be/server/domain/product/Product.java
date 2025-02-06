@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import lombok.*;
@@ -24,8 +25,10 @@ public class Product {
 
     private Long stock;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created_at;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated_at;
 
     public static Product notAvailable(long productId) {
