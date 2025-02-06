@@ -72,7 +72,7 @@ public class CouponControllerIntegrationTest {
     @DisplayName("/api/v1/coupons/user/{userId} 200 OK")
     void coupons() throws Exception {
         // Given
-        long userId = 1L;
+        long userId = 999L;
         // 샘플 데이터 생성
         IssuedCouponResponse coupon1 = new IssuedCouponResponse(1L, 1L, CouponStatus.AVAILABLE,
                 LocalDateTime.now(), LocalDateTime.now().plusDays(7));

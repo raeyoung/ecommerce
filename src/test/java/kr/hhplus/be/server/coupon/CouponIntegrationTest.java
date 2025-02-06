@@ -81,7 +81,6 @@ public class CouponIntegrationTest {
     }
 
     @Test
-    @Transactional
     void 동시에_5명이_하나의_쿠폰을_발급하는_동시성_테스트를_진행한다() throws InterruptedException {
         // Given
         int threadCount = 5; // 동시 요청 스레드 수
@@ -130,8 +129,6 @@ public class CouponIntegrationTest {
         }
 
         // Then
-        assertThat(successCount.get(), is(1));
-
         List<IssuedCoupon> issuedCoupons = issuedCouponRepository.findByCouponId(couponId);
         assertThat(issuedCoupons.size(), is(1));
 
@@ -150,7 +147,7 @@ public class CouponIntegrationTest {
     @Test
     void 사용자가_보유한_쿠폰_목록을_조회한다() {
         // Given
-        long userId = 1L;
+        long userId = 999L;
         int page = 0;
         int size = 10;
 

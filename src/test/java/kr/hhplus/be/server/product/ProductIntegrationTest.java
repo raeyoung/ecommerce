@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Testcontainers
+@Transactional
 @ActiveProfiles("test")
 public class ProductIntegrationTest {
 
@@ -112,8 +114,8 @@ public class ProductIntegrationTest {
     void 상위_상품_목록_조회에_성공한다() {
         // Given
         user = userRepository.save(User.builder().name("하헌우").build());
-
         point = pointRepository.save(Point.builder().userId(1L).currentAmount(10000L).build());
+        productRepository.deleteAll();
         products = productRepository.findAll();
 
         if(products.isEmpty()) {
