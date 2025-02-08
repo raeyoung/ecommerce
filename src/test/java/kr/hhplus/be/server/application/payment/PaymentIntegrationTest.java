@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.payment;
+package kr.hhplus.be.server.application.payment;
 
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponService;
@@ -19,17 +19,14 @@ import kr.hhplus.be.server.domain.order.OrderRepository;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
-import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;

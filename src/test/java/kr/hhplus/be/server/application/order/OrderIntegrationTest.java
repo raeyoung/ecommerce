@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order;
+package kr.hhplus.be.server.application.order;
 
 import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.product.Product;
@@ -12,7 +12,6 @@ import kr.hhplus.be.server.domain.user.PointRepository;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.interfaces.order.OrderProduct;
 import kr.hhplus.be.server.interfaces.order.OrderRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

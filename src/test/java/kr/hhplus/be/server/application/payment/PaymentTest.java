@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.payment;
+package kr.hhplus.be.server.application.payment;
 
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderItem;

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.config.redis;
+package kr.hhplus.be.server.config;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
