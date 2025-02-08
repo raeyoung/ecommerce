@@ -32,4 +32,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     public Coupon save(Coupon coupon) {
         return couponJpaRepository.save(coupon);
     }
+
+    @Override
+    public Long findStockByCouponId(Long couponId) {
+        return couponJpaRepository.findStockByCouponId(couponId);
+    }
 }

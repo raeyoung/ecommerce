@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
@@ -15,4 +16,6 @@ public interface CouponRepository {
     Coupon findById(long couponId);
 
     Coupon save(Coupon coupon);
+
+    Long findStockByCouponId(Long couponId);
 }

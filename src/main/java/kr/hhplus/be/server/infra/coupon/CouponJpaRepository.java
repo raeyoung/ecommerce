@@ -20,4 +20,7 @@ public interface CouponJpaRepository extends JpaRepository<Coupon, Long> {
 
     Coupon findById(long couponId);
 
+    @Query("SELECT c.stock FROM Coupon c WHERE c.id = :couponId")
+    Long findStockByCouponId(Long couponId);
+
 }
