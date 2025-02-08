@@ -51,8 +51,8 @@ dependencies {
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("com.redis.testcontainers:testcontainers-redis")
-	testImplementation("org.mockito:mockito-inline")
+	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
+	testImplementation("org.mockito:mockito-inline:5.2.0")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

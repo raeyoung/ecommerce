@@ -6,8 +6,16 @@ import kr.hhplus.be.server.domain.coupon.CouponStatus;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.IssuedCouponRepository;
+import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.domain.user.UserRepository;
+import kr.hhplus.be.server.facade.coupon.CouponFacade;
+import kr.hhplus.be.server.infra.redis.RedisRepository;
+import kr.hhplus.be.server.interfaces.coupon.CouponCacheResponse;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +42,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CouponIntegrationTest {
 
     @Autowired
+    CouponFacade couponFacade;
+
+    @Autowired
     CouponService couponService;
 
     @Autowired
@@ -42,7 +53,19 @@ public class CouponIntegrationTest {
     @Autowired
     private IssuedCouponRepository issuedCouponRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     private Coupon coupon;
+
+    @Autowired
+    private RedisRepository redisRepository;
+
+    @AfterEach
+    void tearDown() {
+        // Redis 데이터 정리
+        redisRepository.deleteKeysByPattern("coupon-*");
+    }
 
     @Test
     void 선착순_쿠폰_발급에_성공한다() {
@@ -158,5 +181,35 @@ public class CouponIntegrationTest {
         assertThat(result.getContent().size(), is(2)); // 사용자 ID가 1인 사용자는 두 개의 쿠폰을 가지고 있어야 함
         assertThat(result.getContent().get(0).getCouponId(), is(1L)); // 첫 번째 쿠폰 ID가 1이어야 함
         assertThat(result.getContent().get(1).getCouponId(),is(2L)); // 두 번째 쿠폰 ID가 2이어야 함
+    }
+
+    @Test
+    void 사용자가_쿠폰_요청을_정상적으로_캐싱한다() {
+        // Given: 개별적으로 사용자 & 쿠폰 생성
+        User user = userRepository.save(User.builder().name("김래영").build());
+        long couponId = 1L;
+
+        Coupon coupon = Coupon.builder()
+                .id(couponId)
+                .name("설날맞이 10,000원 할인쿠폰")
+                .discountAmount(10000L)
+                .stock(10)
+                .issuedAt(LocalDateTime.now())
+                .expirationAt(LocalDateTime.now().plusDays(7))
+                .build();
+        couponRepository.save(coupon);
+
+        // When
+        CouponCacheResponse response = couponFacade.couponRequestCache(user.getId(), coupon.getId());
+
+        // Then
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.couponId()).isEqualTo(coupon.getId());
+        Assertions.assertThat(response.isCached()).isTrue();
+        Assertions.assertThat(response.userId()).isEqualTo(user.getId());
+
+        // Redis 저장 확인
+        Assertions.assertThat(redisRepository.isMemberOfSet("coupon-" + coupon.getId() + "-issued",
+                coupon.getId() + ":" + user.getId())).isTrue();
     }
 }

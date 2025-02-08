@@ -1,7 +1,10 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import kr.hhplus.be.server.global.annotation.RedissonLock;
+import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
+import kr.hhplus.be.server.infra.redis.RedisRepository;
+import kr.hhplus.be.server.interfaces.coupon.CouponCacheResponse;
 import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.springframework.data.domain.Page;
@@ -12,15 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class CouponService {
     private final CouponRepository couponRepository;
     private final IssuedCouponRepository issuedCouponRepository;
+    private final UserRepository userRepository;
+    private final RedisRepository redisRepository;
 
-    public CouponService(CouponRepository couponRepository, IssuedCouponRepository issuedCouponRepository) {
+    public CouponService(CouponRepository couponRepository, IssuedCouponRepository issuedCouponRepository, UserRepository userRepository, RedisRepository redisRepository) {
         this.couponRepository = couponRepository;
         this.issuedCouponRepository = issuedCouponRepository;
+        this.userRepository = userRepository;
+        this.redisRepository = redisRepository;
     }
 
     /**
@@ -125,4 +133,34 @@ public class CouponService {
         return discountAmount;
     }
 
+    @Transactional
+    public CouponCacheResponse requestCouponCache(Long userId, Long couponId) {
+        Coupon coupon = couponRepository.findByIdWithLock(couponId);
+        if(coupon == null) {
+            throw new IllegalStateException(ExceptionMessage.INVALID_COUPON.getMessage());
+        }
+
+        String setKey = "coupon-"  + couponId + "-issued";
+        String zsetKey = "coupon-"  + couponId + "-requests";
+
+        String uniqueUserKey = couponId + ":" + userId;
+
+        // 1. 중복 발급 방지 (SET 확인)
+        if (redisRepository.isMemberOfSet(setKey, uniqueUserKey)) {
+            throw new IllegalStateException(ExceptionMessage.COUPON_ALREADY_EXISTED.getMessage());
+        }
+
+        // 2. 현재 발급된 쿠폰 수 확인
+        Long issuedCount = redisRepository.getSetSize(setKey);
+        coupon.checkIssuedCount(issuedCount);
+
+        // 3. 쿠폰 유효기간 확인
+        coupon.checkExpiryDate();
+
+        // 4. Redis에 쿠폰 요청 저장 (ZSET + SET, TTL 10분 적용)
+        redisRepository.addToSortedSet(zsetKey, uniqueUserKey, System.currentTimeMillis(), 10, TimeUnit.MINUTES);
+        redisRepository.addToSet(setKey, uniqueUserKey);
+
+        return CouponCacheResponse.to(coupon, userId, true);
+    }
 }

@@ -19,7 +19,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Coupon findByIdWithLock(long couponId) {
+    public Coupon findByIdWithLock(Long couponId) {
         return couponJpaRepository.findByIdWithLock(couponId);
     }
 

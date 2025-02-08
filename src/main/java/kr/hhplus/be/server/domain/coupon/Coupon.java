@@ -39,4 +39,16 @@ public class Coupon {
 
         this.stock -= quantity;
     }
+
+    public void checkExpiryDate() {
+        if(this.expirationAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException(ExceptionMessage.INVALID_COUPON.getMessage());
+        }
+    }
+
+    public void checkIssuedCount(Long count) {
+        if(this.stock <= count) {
+            throw new IllegalStateException(ExceptionMessage.COUPON_SOLD_OUT.getMessage());
+        }
+    }
 }
