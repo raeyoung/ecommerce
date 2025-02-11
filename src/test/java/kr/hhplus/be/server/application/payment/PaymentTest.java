@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.payment;
+package kr.hhplus.be.server.application.payment;
 
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderItem;
@@ -19,7 +19,7 @@ public class PaymentTest {
                 .name("원피스")
                 .price(100000L)
                 .build();
-        OrderItem orderItem = OrderItem.create(2, product);
+        OrderItem orderItem = OrderItem.create(2L, product);
         order.addOrderItem(orderItem);
 
         // when
@@ -49,8 +49,8 @@ public class PaymentTest {
                 .price(7000L)
                 .build();
 
-        OrderItem orderItem1 = OrderItem.create(1, product1);
-        OrderItem orderItem2 = OrderItem.create(2, product2);
+        OrderItem orderItem1 = OrderItem.create(1L, product1);
+        OrderItem orderItem2 = OrderItem.create(2L, product2);
 
         order.addOrderItem(orderItem1);
         order.addOrderItem(orderItem2);

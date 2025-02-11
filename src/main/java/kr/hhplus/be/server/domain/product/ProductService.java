@@ -10,9 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +29,7 @@ public class ProductService {
      * @param sort
      * @return
      */
-    public Page<ProductResponse> products(int page, String criteria, String sort) {
+    public Page<ProductResponse> getProducts(int page, String criteria, String sort) {
         Pageable pageable = (sort.equals("ASC")) ?
                 PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, criteria));
@@ -47,7 +44,7 @@ public class ProductService {
      * @return
      */
     @Cacheable(cacheNames = "products", key = "#productId")
-    public Optional<Product> product(long productId) {
+    public Optional<Product> getProduct(Long productId) {
         return productRepository.findById(productId);
     }
 
@@ -57,7 +54,7 @@ public class ProductService {
      * @param quantity
      * @return
      */
-    @RedissonLock(key = "'product'.concat(':').concat(#productId)")
+    @CachePut(cacheNames = "products", key = "#productId")
     public Product reduceProduct(long productId, long quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException(ExceptionMessage.PRODUCT_NOT_FOUND.getMessage()));

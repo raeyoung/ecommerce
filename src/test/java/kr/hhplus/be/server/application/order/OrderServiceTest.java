@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order;
+package kr.hhplus.be.server.application.order;
 
 import kr.hhplus.be.server.domain.order.*;
 import kr.hhplus.be.server.domain.product.Product;
@@ -48,8 +48,8 @@ public class OrderServiceTest {
                 .updated_at(LocalDateTime.now())
                 .build();
         List<OrderItem> orderItems = List.of(
-                OrderItem.create(2, productItem1),
-                OrderItem.create(1, productItem2)
+                OrderItem.create(2L, productItem1),
+                OrderItem.create(1L, productItem2)
         );
 
         when(orderRepository.save(any(Order.class))).thenReturn(order);

@@ -11,9 +11,11 @@ public interface CouponRepository {
 
     Optional<Coupon> findAvailableCoupon(@Param("couponId") Long couponId);
 
-    Coupon findByIdWithLock(@Param("couponId") long couponId);
+    Coupon findByIdWithLock(Long couponId);
 
     Coupon findById(long couponId);
 
     Coupon save(Coupon coupon);
+
+    Long findStockByCouponId(Long couponId);
 }

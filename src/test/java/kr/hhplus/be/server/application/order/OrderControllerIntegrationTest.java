@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order;
+package kr.hhplus.be.server.application.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.domain.order.*;

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.user;
+package kr.hhplus.be.server.application.user;
 
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.Point;
@@ -93,7 +93,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void 충전금액이_0보다_작을_때_IllegalArgumentException을_반환한다() {
+    void 충전금액이_0보다_작을_때_IllegalStateException을_반환한다() {
         // given
         User user = User.builder()
                 .id(1L)
@@ -103,11 +103,8 @@ public class UserServiceTest {
         Point userPoint = new Point(1L, 5000L);         // 잔액 5000
         PointRequest request = new PointRequest(1L, -100L);  // 음수 금액
 
-        // userRepository와 userPointRepository의 mock 설정
-        when(userPointRepository.findByUserId(1L)).thenReturn(Optional.of(userPoint));  // 기존 userPoint를 반환
-
         // when & then: 예외가 발생하는지 확인
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalStateException.class, () -> {
             userService.chargePoint(request);
         });
     }

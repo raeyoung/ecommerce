@@ -30,6 +30,12 @@ public class IssuedCoupon {
 
     private LocalDateTime updatedAt;
 
+    public IssuedCoupon(long userId, long couponId, CouponStatus couponStatus) {
+        this.userId = userId;
+        this.couponId = couponId;
+        this.status = couponStatus;
+    }
+
     public static IssuedCoupon useCoupon(long userId, long couponId) {
         return IssuedCoupon.builder()
                 .userId(userId)

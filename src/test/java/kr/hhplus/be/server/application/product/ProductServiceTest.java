@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.product;
+package kr.hhplus.be.server.application.product;
 
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductService;
@@ -50,7 +50,7 @@ public class ProductServiceTest {
         when(productRepository.findAll(pageableDesc)).thenReturn(productPageDesc);
 
         // when
-        Page<ProductResponse> result = productService.products(0, "price", "DESC");
+        Page<ProductResponse> result = productService.getProducts(0, "price", "DESC");
 
         // then
         assertThat(result).isNotNull();
@@ -99,7 +99,7 @@ public class ProductServiceTest {
         when(productRepository.findAll(pageable)).thenReturn(productPage);
 
         // When
-        Page<ProductResponse> result = productService.products(0, "price", "DESC");
+        Page<ProductResponse> result = productService.getProducts(0, "price", "DESC");
 
         // Then
         assertThat(result.getContent()).hasSize(3);

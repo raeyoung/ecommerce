@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -50,5 +51,10 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
     @Override
     public void deleteAll() {
         issuedCouponJpaRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Set<IssuedCoupon> issuedCouponSet) {
+        issuedCouponJpaRepository.saveAll(issuedCouponSet);
     }
 }

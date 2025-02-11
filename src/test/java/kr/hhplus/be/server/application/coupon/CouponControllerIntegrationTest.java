@@ -1,8 +1,11 @@
-package kr.hhplus.be.server.coupon;
+package kr.hhplus.be.server.application.coupon;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.domain.coupon.CouponStatus;
 import kr.hhplus.be.server.facade.coupon.CouponFacade;
+import kr.hhplus.be.server.interfaces.coupon.CouponCacheResponse;
 import kr.hhplus.be.server.interfaces.coupon.CouponController;
+import kr.hhplus.be.server.interfaces.coupon.CouponRequest;
 import kr.hhplus.be.server.interfaces.coupon.IssuedCouponResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +75,7 @@ public class CouponControllerIntegrationTest {
     @DisplayName("/api/v1/coupons/user/{userId} 200 OK")
     void coupons() throws Exception {
         // Given
-        long userId = 1L;
+        long userId = 999L;
         // 샘플 데이터 생성
         IssuedCouponResponse coupon1 = new IssuedCouponResponse(1L, 1L, CouponStatus.AVAILABLE,
                 LocalDateTime.now(), LocalDateTime.now().plusDays(7));
@@ -95,5 +98,22 @@ public class CouponControllerIntegrationTest {
                 .andExpect(jsonPath("$.content[1].couponId").value(2L))  // 두 번째 쿠폰의 couponId가 2L이어야 한다
                 .andExpect(jsonPath("$.content[0].status").value("AVAILABLE"))  // 첫 번째 쿠폰의 상태가 "AVAILABLE"이어야 한다
                 .andExpect(jsonPath("$.content[1].status").value("AVAILABLE"));  // 두 번째 쿠폰의 상태가 "AVAILABLE"이어야 한다
+    }
+
+    @Test
+    @DisplayName("/api/v1/coupons/cache 200 OK")
+    void cacheCoupon() throws Exception {
+        // Given
+        long userId = 1L;
+        long couponId = 100L;
+
+        CouponRequest request = new CouponRequest(userId, couponId);
+        String requestJson = new ObjectMapper().writeValueAsString(request);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/coupons/cache")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
     }
 }
