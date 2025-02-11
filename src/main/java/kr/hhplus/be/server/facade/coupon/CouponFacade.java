@@ -14,11 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CouponFacade {
 
     private final CouponService couponService;
-    private final UserService userService;
 
-    public CouponFacade(CouponService couponService, UserService userService) {
+    public CouponFacade(CouponService couponService) {
         this.couponService = couponService;
-        this.userService = userService;
     }
 
     @RedissonLock(key = "'coupon:' + #request.couponId() + ':user:' + #request.userId()")

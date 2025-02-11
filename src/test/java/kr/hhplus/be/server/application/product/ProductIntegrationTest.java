@@ -113,7 +113,7 @@ public class ProductIntegrationTest {
     @Test
     void 상위_상품_목록_조회에_성공한다() {
         // Given
-        user = userRepository.save(User.builder().name("하헌우").build());
+        user = userRepository.save(User.builder().name("김미피").build());
         point = pointRepository.save(Point.builder().userId(1L).currentAmount(10000L).build());
         productRepository.deleteAll();
         products = productRepository.findAll();

@@ -3,14 +3,10 @@ package kr.hhplus.be.server.domain.user;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
 import kr.hhplus.be.server.interfaces.user.PointResponse;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class UserService {

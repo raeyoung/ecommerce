@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.facade.user.UserFacade;
 import kr.hhplus.be.server.global.model.CommonApiResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
