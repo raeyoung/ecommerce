@@ -6,6 +6,8 @@ import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
+import kr.hhplus.be.server.domain.payment.event.PaymentCompleteEvent;
+import kr.hhplus.be.server.domain.payment.event.PaymentEventHandler;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PaymentFacade {
 
+    private final PaymentEventHandler eventHandler;
+
     private final OrderService orderService;
 
     private final PaymentService paymentService;
@@ -24,7 +28,8 @@ public class PaymentFacade {
 
     private final CouponService couponService;
 
-    public PaymentFacade(OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
+    public PaymentFacade(PaymentEventHandler eventHandler, OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
+        this.eventHandler = eventHandler;
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.userService = userService;
@@ -51,12 +56,8 @@ public class PaymentFacade {
         // 결제 처리
         Payment payment = paymentService.processPayment(userId, order);
 
-        sendToPlatform();
+        eventHandler.paymentCompleteEventHandler(PaymentCompleteEvent.of(userId, order));
 
         return PaymentResponse.from(payment);
-    }
-
-    public void sendToPlatform () {
-        System.out.println("결재 정보가 데이터 플랫폼에 전송되었습니다.");
     }
 }
