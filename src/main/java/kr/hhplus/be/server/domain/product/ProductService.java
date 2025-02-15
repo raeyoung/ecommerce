@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.product;
 
-import kr.hhplus.be.server.global.annotation.RedissonLock;
 import kr.hhplus.be.server.global.exception.ExceptionMessage;
 import kr.hhplus.be.server.interfaces.product.ProductResponse;
 import org.springframework.cache.annotation.CachePut;
