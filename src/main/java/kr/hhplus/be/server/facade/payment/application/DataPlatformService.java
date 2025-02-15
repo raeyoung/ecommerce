@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.payment.event;
+package kr.hhplus.be.server.facade.payment.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

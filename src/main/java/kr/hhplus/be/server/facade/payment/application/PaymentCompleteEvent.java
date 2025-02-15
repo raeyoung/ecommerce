@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.payment.event;
+package kr.hhplus.be.server.facade.payment.application;
 
 import kr.hhplus.be.server.domain.order.Order;
 import lombok.AllArgsConstructor;
