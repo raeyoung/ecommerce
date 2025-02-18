@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.facade.payment.application;
 
-import kr.hhplus.be.server.domain.order.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,13 +8,15 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class PaymentCompleteEvent {
+    private String topic;
     private Long userId;
-    private Order order;
+    private Long orderId;
 
-    public static PaymentCompleteEvent of(Long userId, Order order) {
+    public static PaymentCompleteEvent of(Long userId, Long orderId) {
         return PaymentCompleteEvent.builder()
+                .topic("payment-success")
                 .userId(userId)
-                .order(order)
+                .orderId(orderId)
                 .build();
     }
 }

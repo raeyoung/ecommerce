@@ -1,6 +1,10 @@
 package kr.hhplus.be.server.facade.payment.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -9,11 +13,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class PaymentEventListener {
 
-    private final DataPlatformService dataPlatformService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
+    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void paymentCompleteEventListener(PaymentCompleteEvent event) {
-        String message = String.format("사용자(UserId: %d) 결제 성공!", event.getUserId());
-        dataPlatformService.sendMessage(message);
+    public void paymentCompleteEventHandler(PaymentCompleteEvent event) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        kafkaTemplate.send(event.getTopic(), objectMapper.writeValueAsString(event));
     }
 }

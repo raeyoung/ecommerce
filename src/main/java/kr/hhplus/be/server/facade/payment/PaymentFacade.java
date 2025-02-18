@@ -7,18 +7,18 @@ import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.facade.payment.application.PaymentCompleteEvent;
-import kr.hhplus.be.server.facade.payment.application.PaymentEventListener;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentFacade {
 
-    private final PaymentEventListener eventListener;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final OrderService orderService;
 
@@ -28,8 +28,8 @@ public class PaymentFacade {
 
     private final CouponService couponService;
 
-    public PaymentFacade(PaymentEventListener eventListener, OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
-        this.eventListener = eventListener;
+    public PaymentFacade(ApplicationEventPublisher eventPublisher, OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
+        this.eventPublisher = eventPublisher;
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.userService = userService;
@@ -56,7 +56,7 @@ public class PaymentFacade {
         // 결제 처리
         Payment payment = paymentService.processPayment(userId, order);
 
-        eventListener.paymentCompleteEventListener(PaymentCompleteEvent.of(userId, order));
+        eventPublisher.publishEvent(PaymentCompleteEvent.of(userId, order.getOrderId()));
 
         return PaymentResponse.from(payment);
     }
