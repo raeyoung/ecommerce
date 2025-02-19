@@ -6,7 +6,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableKafka
 @EnableRetry
 @EnableScheduling
 @SpringBootApplication

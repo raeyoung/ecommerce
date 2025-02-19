@@ -6,19 +6,19 @@ import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.order.OrderStatus;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
-import kr.hhplus.be.server.facade.payment.application.PaymentCompleteEvent;
 import kr.hhplus.be.server.domain.user.UserService;
+import kr.hhplus.be.server.facade.payment.application.PaymentEventPublisher;
+import kr.hhplus.be.server.facade.payment.application.PaymentSuccessEvent;
 import kr.hhplus.be.server.interfaces.payment.PaymentRequest;
 import kr.hhplus.be.server.interfaces.payment.PaymentResponse;
 import kr.hhplus.be.server.interfaces.user.PointRequest;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentFacade {
 
-    private final ApplicationEventPublisher eventPublisher;
+    private final PaymentEventPublisher paymentEventPublisher;
 
     private final OrderService orderService;
 
@@ -28,8 +28,8 @@ public class PaymentFacade {
 
     private final CouponService couponService;
 
-    public PaymentFacade(ApplicationEventPublisher eventPublisher, OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
-        this.eventPublisher = eventPublisher;
+    public PaymentFacade(PaymentEventPublisher paymentEventPublisher, OrderService orderService, PaymentService paymentService, UserService userService, CouponService couponService) {
+        this.paymentEventPublisher = paymentEventPublisher;
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.userService = userService;
@@ -56,7 +56,7 @@ public class PaymentFacade {
         // 결제 처리
         Payment payment = paymentService.processPayment(userId, order);
 
-        eventPublisher.publishEvent(PaymentCompleteEvent.of(userId, order.getOrderId()));
+        paymentEventPublisher.success(new PaymentSuccessEvent(payment.getOrderId(), payment.getId()));
 
         return PaymentResponse.from(payment);
     }

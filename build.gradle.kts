@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.projectlombok:lombok:1.18.20")
 
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
@@ -55,6 +56,7 @@ dependencies {
 	testImplementation("org.mockito:mockito-inline:5.2.0")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("org.testcontainers:kafka")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
