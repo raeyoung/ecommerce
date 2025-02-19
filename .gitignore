@@ -39,4 +39,4 @@ out/
 data
 /kafka/
 /grafana/data
-/prometheus/data
+prometheus/

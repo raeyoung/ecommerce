@@ -20,7 +20,6 @@ public class PaymentEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void savePaymentOutBox(PaymentSuccessEvent event) {
-        // 예약정보 저장
         log.info("savePaymentOutBox : {}", event);
     }
 
