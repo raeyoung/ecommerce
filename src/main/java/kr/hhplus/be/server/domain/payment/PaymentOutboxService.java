@@ -24,4 +24,8 @@ public class PaymentOutboxService {
         byPayload.forEach(PaymentOutbox::publishedStatus);
         log.info("byPayload : {}", byPayload);
     }
+
+    public List<PaymentOutbox> findFailMessages() {
+        return paymentOutboxRepository.findByOutboxStatus(PaymentOutboxStatus.INIT);
+    }
 }

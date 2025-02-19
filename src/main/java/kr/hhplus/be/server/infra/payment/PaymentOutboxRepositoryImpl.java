@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infra.payment;
 
 import kr.hhplus.be.server.domain.payment.PaymentOutbox;
 import kr.hhplus.be.server.domain.payment.PaymentOutboxRepository;
+import kr.hhplus.be.server.domain.payment.PaymentOutboxStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,10 @@ public class PaymentOutboxRepositoryImpl implements PaymentOutboxRepository {
     @Override
     public List<PaymentOutbox> findByPayload(String data) {
         return paymentOutboxJpaRepository.findByPayload(data);
+    }
+
+    @Override
+    public List<PaymentOutbox> findByOutboxStatus(PaymentOutboxStatus paymentOutboxStatus) {
+        return paymentOutboxJpaRepository.findByOutboxStatus(paymentOutboxStatus);
     }
 }
