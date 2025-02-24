@@ -30,14 +30,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.projectlombok:lombok:1.18.20")
 
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
 	// swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
@@ -51,14 +50,14 @@ dependencies {
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
 	testImplementation("org.mockito:mockito-inline:5.2.0")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("org.testcontainers:kafka")
+	testImplementation("com.redis:testcontainers-redis")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-	systemProperty("user.timezone", "UTC")
 }

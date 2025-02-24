@@ -1,19 +1,33 @@
 package kr.hhplus.be.server.facade.payment.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.hhplus.be.server.domain.payment.PaymentMessageProducer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentEventListener {
 
-    private final DataPlatformService dataPlatformService;
+    private final PaymentMessageProducer paymentMessageProducer;
 
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void savePaymentOutBox(PaymentSuccessEvent event) {
+        log.info("savePaymentOutBox : {}", event);
+    }
+
+    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void paymentCompleteEventListener(PaymentCompleteEvent event) {
-        String message = String.format("사용자(UserId: %d) 결제 성공!", event.getUserId());
-        dataPlatformService.sendMessage(message);
+    public void handlePayment(PaymentSuccessEvent event) {
+        // 카프카 발행
+        log.info("handlePayment : {}", event);
+        paymentMessageProducer.send("payment-topic", event);
     }
 }

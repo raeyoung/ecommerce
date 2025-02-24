@@ -37,3 +37,6 @@ out/
 .vscode/
 
 data
+/kafka/
+/grafana/data
+prometheus/
